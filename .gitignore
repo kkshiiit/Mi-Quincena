@@ -1,0 +1,24 @@
+# Build output
+.build/
+dist/
+*.apk
+*.idsig
+
+# Signing keys and passwords: never commit these
+*.jks
+*.keystore
+*.pass
+*.p12
+.env
+
+# Local backups and personal data exports
+*.bak
+*-respaldo.json
+Mi-Quincena-*.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/

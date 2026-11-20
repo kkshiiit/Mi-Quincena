@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="35" android:compileSdkVersionCodename="15" package="ar.miquincena" platformBuildVersionCode="35" platformBuildVersionName="15">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <application android:allowBackup="false" android:icon="@drawable/icon" android:label="Mi Quincena" android:supportsRtl="true" android:theme="@style/AppTheme" android:usesCleartextTraffic="false">
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:name=".MainActivity" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <provider android:authorities="ar.miquincena.files" android:exported="false" android:grantUriPermissions="true" android:name=".ExportProvider"/>
+        <service android:exported="false" android:name=".ReminderService" android:permission="android.permission.BIND_JOB_SERVICE"/>
+    </application>
+</manifest>
