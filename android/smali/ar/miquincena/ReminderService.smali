@@ -60,7 +60,15 @@
 
     move-result v1
 
+    if-nez v1, :sched_on
+
+    invoke-static {p0}, Lar/miquincena/ReminderService;->paydayOn(Landroid/content/Context;)Z
+
+    move-result v1
+
     if-eqz v1, :cond_0
+
+    :sched_on
 
     new-instance v1, Landroid/app/job/JobInfo$Builder;
 
@@ -106,6 +114,9 @@
 # virtual methods
 .method public onStartJob(Landroid/app/job/JobParameters;)Z
     .locals 11
+
+    invoke-static {p0}, Lar/miquincena/ReminderService;->checkPayday(Landroid/content/Context;)V
+
 
     .line 6
     const-string p1, "daily"
@@ -412,3 +423,152 @@
 
     return p1
 .end method
+
+.method static paydayOn(Landroid/content/Context;)Z
+    .locals 3
+
+    :try_start_0
+    const-string v0, "miquincena"
+    const/4 v1, 0x0
+    invoke-virtual {p0, v0, v1}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+    move-result-object v0
+    const-string v1, "payday-config"
+    const-string v2, "{}"
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v0
+    new-instance v1, Lorg/json/JSONObject;
+    invoke-direct {v1, v0}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    const-string v0, "enabled"
+    const/4 v2, 0x0
+    invoke-virtual {v1, v0, v2}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+    move-result v0
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+    return v0
+
+    :catch_0
+    const/4 v0, 0x0
+    return v0
+.end method
+
+# Aviso del día de cobro: lee las fechas que preparó la app (sin importes) y notifica una vez por día.
+.method static checkPayday(Landroid/content/Context;)V
+    .locals 9
+
+    :try_start_0
+    const-string v0, "miquincena"
+    const/4 v1, 0x0
+    invoke-virtual {p0, v0, v1}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+    move-result-object v0
+    new-instance v2, Lorg/json/JSONObject;
+    const-string v3, "payday-config"
+    const-string v4, "{}"
+    invoke-interface {v0, v3, v4}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v3
+    invoke-direct {v2, v3}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    const-string v3, "enabled"
+    invoke-virtual {v2, v3, v1}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+    move-result v3
+    if-eqz v3, :done
+
+    new-instance v3, Ljava/text/SimpleDateFormat;
+    const-string v4, "yyyy-MM-dd"
+    sget-object v5, Ljava/util/Locale;->US:Ljava/util/Locale;
+    invoke-direct {v3, v4, v5}, Ljava/text/SimpleDateFormat;-><init>(Ljava/lang/String;Ljava/util/Locale;)V
+    new-instance v4, Ljava/util/Date;
+    invoke-direct {v4}, Ljava/util/Date;-><init>()V
+    invoke-virtual {v3, v4}, Ljava/text/SimpleDateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+    move-result-object v3
+
+    const-string v4, "payday-last"
+    const-string v5, ""
+    invoke-interface {v0, v4, v5}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v4
+    invoke-virtual {v3, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    move-result v4
+    if-nez v4, :done
+
+    const-string v4, "dates"
+    invoke-virtual {v2, v4}, Lorg/json/JSONObject;->optJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
+    move-result-object v4
+    if-eqz v4, :done
+    const-string v5, ""
+    invoke-virtual {v4, v3, v5}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v4
+    invoke-virtual {v4}, Ljava/lang/String;->isEmpty()Z
+    move-result v5
+    if-nez v5, :done
+
+    invoke-static {}, Ljava/util/Calendar;->getInstance()Ljava/util/Calendar;
+    move-result-object v5
+    const/16 v6, 0xb
+    invoke-virtual {v5, v6}, Ljava/util/Calendar;->get(I)I
+    move-result v5
+    const-string v6, "hour"
+    const/16 v7, 0x9
+    invoke-virtual {v2, v6, v7}, Lorg/json/JSONObject;->optInt(Ljava/lang/String;I)I
+    move-result v6
+    if-lt v5, v6, :done
+
+    const-class v5, Landroid/app/NotificationManager;
+    invoke-virtual {p0, v5}, Landroid/content/Context;->getSystemService(Ljava/lang/Class;)Ljava/lang/Object;
+    move-result-object v5
+    check-cast v5, Landroid/app/NotificationManager;
+    invoke-virtual {v5}, Landroid/app/NotificationManager;->areNotificationsEnabled()Z
+    move-result v6
+    if-eqz v6, :done
+
+    new-instance v6, Landroid/app/NotificationChannel;
+    const-string v7, "payday"
+    const-string v8, "D\u00eda de cobro"
+    const/4 v2, 0x3
+    invoke-direct {v6, v7, v8, v2}, Landroid/app/NotificationChannel;-><init>(Ljava/lang/String;Ljava/lang/CharSequence;I)V
+    invoke-virtual {v5, v6}, Landroid/app/NotificationManager;->createNotificationChannel(Landroid/app/NotificationChannel;)V
+
+    new-instance v6, Landroid/content/Intent;
+    const-class v2, Lar/miquincena/MainActivity;
+    invoke-direct {v6, p0, v2}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+    const/high16 v2, 0x14000000
+    invoke-virtual {v6, v2}, Landroid/content/Intent;->setFlags(I)Landroid/content/Intent;
+    move-result-object v6
+    const/4 v2, 0x1
+    const/high16 v1, 0xc000000
+    invoke-static {p0, v2, v6, v1}, Landroid/app/PendingIntent;->getActivity(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
+    move-result-object v6
+
+    new-instance v1, Landroid/app/Notification$Builder;
+    invoke-direct {v1, p0, v7}, Landroid/app/Notification$Builder;-><init>(Landroid/content/Context;Ljava/lang/String;)V
+    const v2, 0x1080046
+    invoke-virtual {v1, v2}, Landroid/app/Notification$Builder;->setSmallIcon(I)Landroid/app/Notification$Builder;
+    move-result-object v1
+    invoke-virtual {v1, v8}, Landroid/app/Notification$Builder;->setContentTitle(Ljava/lang/CharSequence;)Landroid/app/Notification$Builder;
+    move-result-object v1
+    invoke-virtual {v1, v4}, Landroid/app/Notification$Builder;->setContentText(Ljava/lang/CharSequence;)Landroid/app/Notification$Builder;
+    move-result-object v1
+    const/4 v2, 0x1
+    invoke-virtual {v1, v2}, Landroid/app/Notification$Builder;->setAutoCancel(Z)Landroid/app/Notification$Builder;
+    move-result-object v1
+    invoke-virtual {v1, v6}, Landroid/app/Notification$Builder;->setContentIntent(Landroid/app/PendingIntent;)Landroid/app/Notification$Builder;
+    move-result-object v1
+    invoke-virtual {v1}, Landroid/app/Notification$Builder;->build()Landroid/app/Notification;
+    move-result-object v1
+    const/16 v2, 0x962
+    invoke-virtual {v5, v2, v1}, Landroid/app/NotificationManager;->notify(ILandroid/app/Notification;)V
+
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    const-string v1, "payday-last"
+    invoke-interface {v0, v1, v3}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    move-result-object v0
+    invoke-interface {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    :done
+    return-void
+
+    :catch_0
+    move-exception v0
+    return-void
+.end method
+

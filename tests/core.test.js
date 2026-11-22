@@ -80,3 +80,25 @@ assert.strictEqual(r.state.settings.theme, 'amoled'); assert.strictEqual(r.state
 r = Core.restore(cur, bk, { mode: 'replace', parts: { rows: true, appearance: true } });
 assert.strictEqual(r.state.rows.length, 1); assert.strictEqual(r.state.settings.theme, 'light'); assert.strictEqual(r.state.rules.length, 0);
 console.log('restore ok');}
+
+// Pago especial: solo sugiere, respeta encendido
+{const st = Core.migrate({ version: 1, rules: [], rows: [], payments: [] }).settings;
+assert.strictEqual(Core.specialFor(st, '2026-11-22'), null);
+st.specialPay.enabled = true;
+assert.deepStrictEqual(Core.specialFor(st, '2026-11-22'), { mult: 2, reason: 'Domingo' });
+assert.strictEqual(Core.specialFor(st, '2026-11-23').reason, 'Feriado: Soberanía Nacional');
+assert.strictEqual(Core.specialFor(st, '2026-11-24'), null);
+assert.strictEqual(Core.specialFor(st, '2026-11-21'), null);
+// Avisos
+const w = Core.rowWarnings({ date: '2026-11-10', status: 'Presente', start: '06:00', end: '22:00', breakMinutes: 0, overnight: false, place: '' }, '2026-11-22');
+assert.ok(w.some(x => x.includes('14 h')) && w.some(x => x.includes('lugar')));
+assert.deepStrictEqual(Core.rowWarnings({ date: '2026-11-10', status: 'Presente', start: '08:00', end: '16:00', breakMinutes: 0, overnight: false, place: 'Obra' }, '2026-11-22'), []);
+// Fechas de cobro: 1ª el 20 del mismo mes, 2ª el 5 del siguiente
+const pd = Core.paydays({ first: 20, firstMonth: 'same', second: 5, secondMonth: 'next' }, '2026-11-22', 3);
+assert.deepStrictEqual(pd, [{ date: '2026-12-05', key: '2026-11:2' }, { date: '2026-12-20', key: '2026-12:1' }, { date: '2027-01-05', key: '2026-12:2' }]);
+assert.strictEqual(Core.paydays({ first: 31, firstMonth: 'same', second: 31, secondMonth: 'same' }, '2027-02-01', 1)[0].date, '2027-02-28');
+// Estadísticas por obra
+const ps = Core.placeStats({ rules: rules2, rows: [{ ...dbl, place: 'Obra A', multiplier: undefined }, { ...dbl, date: '2026-01-06', place: 'obra a ' }, { ...dbl, date: '2026-01-07', place: 'Obra B', multiplier: undefined }] }, '2026-01-01', '2026-01-31');
+assert.strictEqual(ps.list[0].days, 2); assert.strictEqual(ps.list[0].special, 1); assert.strictEqual(ps.tot.days, 3);
+assert.deepStrictEqual(Core.missingDays({ rows: [{ date: '2026-11-02', status: 'Presente' }] }, '2026-11', '1', '2026-11-04'), ['2026-11-01', '2026-11-03']);
+console.log('features ok');}

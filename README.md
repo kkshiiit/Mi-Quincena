@@ -17,15 +17,19 @@ Para quien cobra por día, por hora o con sueldo mensual y quiere saber exactame
 
 | Pantalla | Para qué sirve |
 |---|---|
-| **Quincena** | Muestra el saldo pendiente de cobro, lo generado y lo cobrado (con %), tus jornadas, horas y horas extra. Incluye un gráfico de las últimas 6 quincenas y un aviso si quedó plata sin cobrar de quincenas anteriores. |
+| **Quincena** | Saldo pendiente, generado y cobrado (con %), jornadas, horas y extras. Avisos de día de cobro, días sin registrar y saldo de quincenas anteriores. Resumen por obra y gráfico de las últimas 6 quincenas. |
 | **Horarios** | La planilla de cada día del período: asistencia, entrada, salida y descanso. Se puede filtrar por estado y cargar varios días iguales de una vez. |
+| **Por obra** | Días, horas, extras e importe en cada obra o lugar (quincena, mes, 3 meses, año o todo). |
 | **Pagos** | La liquidación (base, extras, ajustes, generado, cobrado y pendiente), los cobros, los ajustes (viáticos, descuentos) y el botón para cerrar o reabrir una quincena. |
-| **Ajustes** | Tarifas por vigencia, recordatorios, copias de seguridad, Google Drive, importar Excel, apariencia (claro, oscuro, AMOLED) y la guía de uso. |
+| **Ajustes** | Perfil, tarifas por vigencia y aumentos, recordatorios, apariencia (temas y 8 colores), funciones opcionales, tus datos (copias, Drive, importar, exportar) y la guía de uso. |
 
 Además:
 - **Compartir quincena** en 5 formatos: texto para WhatsApp, imagen, PDF, Excel y Word. Antes de compartir elegís si incluir el pendiente, el generado, el cobrado con porcentaje y el detalle por día.
 - **Buscador**: encuentra cualquier día, fecha, lugar, cobro o importe en todos los períodos.
 - **Tarifas con vigencia**: si te aumentan, los días anteriores conservan su valor.
+- **Pago del día** (×1,5, doble, triple u otro) y, si lo activás, sugerencia con confirmación en domingos y feriados.
+- **Funciones opcionales**, cada una con su interruptor: pago especial, avisos de errores de carga, aviso de día de cobro (con notificación), resumen por obra, ocultar en apps recientes y bloqueo con PIN.
+- **Restaurar copias** combinando o reemplazando por partes, sin pisar tu tema ni tu perfil.
 - **Deshacer** después de cada cambio, y una copia local automática antes de guardar.
 
 La guía completa, con ejemplos, está en [docs/GUIA.md](docs/GUIA.md).
@@ -47,10 +51,10 @@ app/        Interfaz y lógica (HTML, CSS y JavaScript puro, sin frameworks)
   app.js         Pantallas, formularios, compartir, búsqueda
   core.js        Cálculos puros: horas, extras, tarifas, saldos, búsqueda (con tests)
   style.css      Diseño (vidrio translúcido, temas claro/oscuro/AMOLED)
-  seed.js        Datos iniciales vacíos para la primera apertura
+  seed.js        Datos iniciales (vacío)
   xlsx.full.min.js, jspdf.umd.min.js   Librerías de terceros (Excel/Word y PDF)
 android/    Contenedor nativo (proyecto apktool: manifiesto, recursos, código smali)
-tests/      Tests de los cálculos (node tests/core.test.js)
+tests/      Tests de los cálculos y prueba de 3000 escenarios al azar (npm test)
 scripts/    build.sh: arma y firma el APK
 docs/       Guía de uso y notas técnicas
 ```
@@ -59,7 +63,8 @@ La parte nativa (`android/`) resuelve lo que una página web no puede hacer sola
 - guardar los datos en el teléfono;
 - compartir y guardar archivos;
 - respaldar en Drive;
-- mandar recordatorios.
+- mandar recordatorios y el aviso de día de cobro;
+- ocultar la app en recientes (FLAG_SECURE).
 
 El detalle está en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
 
@@ -76,8 +81,10 @@ Abrí `http://localhost:8765`. Las funciones nativas (Drive, recordatorios) apar
 **Correr los tests:**
 
 ```bash
-node tests/core.test.js
+npm test
 ```
+
+En GitHub, cada push corre los tests y compila un APK de prueba (Actions → artefacto `Mi-Quincena-apk`).
 
 **Compilar el APK.** Necesitás Java 17 o más nuevo, [apktool](https://apktool.org) y [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer):
 
@@ -90,8 +97,9 @@ Sin `MQ_KEYSTORE` se firma con una clave de prueba. Para publicar actualizacione
 ## Privacidad
 
 - No hay servidores, cuentas, analíticas ni publicidad.
-- La app no pide permiso de internet para la interfaz: todo se carga desde el propio APK.
+- La app **no tiene permiso de Internet**: todo se carga desde el propio APK.
 - Los datos viven en el almacenamiento privado de la app. Solo salen del teléfono si vos exportás, compartís o vinculás un archivo de Drive.
+- Auditoría completa en [docs/PRIVACIDAD.md](docs/PRIVACIDAD.md).
 
 ## Créditos
 
