@@ -167,3 +167,10 @@ No hay una tarifa vigente para esa fecha. Creá una con una fecha de inicio ante
 - **Imagen**: muestra todas las jornadas que entran (se agranda hasta formato historia), con lugar, horario, extras y ×2.
 - **WhatsApp**: puesto, ajustes, cobros y días especiales.
 - Archivos con nombre claro: `Mi-Quincena_2026-11_2a-quincena_tu-nombre.pdf`.
+
+## Novedades 3.6 — Restaurar copias
+
+- Restaurar ya no cambia tu tema, color, perfil ni recordatorios, salvo que lo elijas.
+- Modo **Combinar** (por defecto): agrega días, tarifas, cobros y ajustes que faltan sin tocar lo cargado.
+- Modo **Reemplazar**: deja exactamente lo de la copia en las partes elegidas.
+- Vista previa de lo que va a cambiar y fecha de la copia.

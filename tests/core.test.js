@@ -71,3 +71,12 @@ assert.strictEqual(Core.summarize(ms, '2026-01').base, base + 100);
 const rr = Core.ruleRanges([{ from: '2026-03-01', mode: 'day', rate: 1100 }, { from: '2026-01-01', mode: 'day', rate: 1000 }]);
 assert.strictEqual(rr[0].to, '2026-02-28'); assert.strictEqual(rr[1].to, ''); assert.strictEqual(rr[1].change, 10);
 console.log('math ok');
+
+// Restauración selectiva: no cambia el tema si no se pide
+{const cur = Core.migrate({ version: 1, rules: [], rows: [{ ...dbl, date: '2026-03-01' }], payments: [] });cur.settings.theme = 'amoled'; cur.settings.accent = 'red';
+const bk = Core.migrate({ version: 1, rules: rules2, rows: [{ ...dbl, date: '2026-03-02' }], payments: [{ id: 'z', date: '2026-03-02', amount: 5, note: '' }] }); bk.settings.theme = 'light';
+let r = Core.restore(cur, bk, { mode: 'merge', parts: { rows: true, rules: true, money: true } });
+assert.strictEqual(r.state.settings.theme, 'amoled'); assert.strictEqual(r.state.settings.accent, 'red'); assert.strictEqual(r.state.rows.length, 2); assert.strictEqual(r.state.payments.length, 1); assert.strictEqual(r.stats.rows[0], 1);
+r = Core.restore(cur, bk, { mode: 'replace', parts: { rows: true, appearance: true } });
+assert.strictEqual(r.state.rows.length, 1); assert.strictEqual(r.state.settings.theme, 'light'); assert.strictEqual(r.state.rules.length, 0);
+console.log('restore ok');}
