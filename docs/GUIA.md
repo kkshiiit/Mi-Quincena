@@ -147,3 +147,13 @@ No hay una tarifa vigente para esa fecha. Creá una con una fecha de inicio ante
 - **Pagos** rediseñada: saldo, acciones rápidas (cobrar saldo completo), liquidación y movimientos con colores.
 - **Ajustes** reorganizado: perfil (nombre, puesto, empleador), apariencia con colores de acento, datos y ayuda.
 - Menos animaciones y desenfoque para que la app sea más liviana.
+
+## Novedades 3.4
+
+- **Tarifas por vigencia**: tarjeta de la tarifa vigente (valor hora, hora extra, jornada), historial en línea de tiempo con rango de fechas, % de aumento y días que usa cada tarifa.
+- **Registrar aumento**: por % o nuevo importe, desde una fecha; opcionalmente aumenta también la hora extra.
+- **Hora extra con recargo %** sobre el valor hora (50 % = 1,5 horas).
+- **Cálculos revisados**: redondeo al centavo simétrico (también en descuentos), valor hora mensual = sueldo ÷ (25 × jornada), día ×2 con sueldo mensual suma un día más.
+- **Recordatorios**: horas sugeridas, días como botones, atajos (Lun a vie, Todos…) y “Próximo aviso”.
+- **Tus datos**: resumen (días, cobros, tarifas, tamaño), aviso si hace más de 14 días que no exportás una copia, versiones con fecha relativa, borrar todo con confirmación.
+- **Guía**: buscador, índice y la sección “Cómo se calcula todo” con las fórmulas.

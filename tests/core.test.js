@@ -52,3 +52,22 @@ assert.strictEqual(Core.calc({ ...dbl, end: '16:00' }, hourRules).total, 1600);
 assert.doesNotThrow(() => Core.validateState({ ...state, settings: { ...state.settings, accent: 'violet', employer: 'X', job: 'Y' } }));
 assert.throws(() => Core.validateState({ ...state, settings: { ...state.settings, accent: '#fff' } }));
 console.log('multiplier ok');
+
+// Redondeo simétrico
+assert.strictEqual(Core.round(1.005), 1.01); assert.strictEqual(Core.round(-1.005), -1.01); assert.ok(Object.is(Core.round(-0.001), 0));
+// Hora extra con recargo %
+const pr = { from: '2026-01-01', mode: 'day', rate: 8000, extra: 0, hours: 8, extraCalc: 'percent', extraPct: 50, calculationVersion: 2 };
+assert.doesNotThrow(() => Core.validateRule(pr));
+assert.strictEqual(Core.hourValue(pr), 1000); assert.strictEqual(Core.extraRate(pr), 1500);
+assert.strictEqual(Core.calc({ ...dbl, multiplier: undefined }, [pr]).total, 8000 + 2 * 1500);
+assert.strictEqual(Core.hourValue({ mode: 'month', rate: 200000, hours: 8 }), 1000);
+assert.throws(() => Core.validateRule({ ...pr, extraPct: -1 }));
+// Mensual + día doble suma un día extra
+const ms = Core.migrate({ version: 1, rules: [{ from: '2026-01-01', mode: 'month', rate: 3100, extra: 0, hours: 8 }], rows: [], payments: [] });
+const base = Core.summarize(ms, '2026-01').base;
+ms.rows.push({ ...dbl, end: '16:00' });
+assert.strictEqual(Core.summarize(ms, '2026-01').base, base + 100);
+// Rangos de vigencia
+const rr = Core.ruleRanges([{ from: '2026-03-01', mode: 'day', rate: 1100 }, { from: '2026-01-01', mode: 'day', rate: 1000 }]);
+assert.strictEqual(rr[0].to, '2026-02-28'); assert.strictEqual(rr[1].to, ''); assert.strictEqual(rr[1].change, 10);
+console.log('math ok');

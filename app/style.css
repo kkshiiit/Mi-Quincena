@@ -410,3 +410,42 @@ details.adv summary{min-height:44px;padding:10px 0}
 .no-glass nav button,.no-glass nav button.active{background:transparent}
 .accents{gap:8px}
 .accent-dot{width:34px;height:34px;min-height:34px}
+/* ===== 3.4: tarifas, recordatorios, datos, guía ===== */
+.rate-hero{padding:18px;border-radius:22px;background:linear-gradient(140deg,var(--tint-strong),var(--tint));margin:6px 0 4px}
+.rate-hero>small{font-weight:650}
+.rate-hero>strong{display:block;font-size:30px;letter-spacing:-.03em;margin:2px 0 12px}
+.rate-hero>strong span{font-size:15px;color:var(--muted);font-weight:600}
+.rate-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate-facts span{font-size:12px;color:var(--muted)}
+.rate-facts b{display:block;font-size:15px;color:var(--ink)}
+.timeline{list-style:none;margin:0;padding:0 0 0 16px;border-left:2px solid var(--hair);display:grid;gap:10px}
+.timeline li{position:relative}
+.timeline li::before{content:"";position:absolute;left:-23px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--hair);border:2px solid var(--bg)}
+.timeline li:has(.current)::before{background:var(--accent)}
+.rate-card small{display:block}
+.delta{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
+.delta.up{color:var(--success);background:color-mix(in srgb,var(--success) 14%,transparent)}
+.delta.down{color:var(--danger);background:color-mix(in srgb,var(--danger) 14%,transparent)}
+.seg-radio.two-col{grid-template-columns:1fr 1fr}
+.preview .line{padding:6px 0;font-size:14px}
+.preview .line b{color:var(--ink)}
+.days .chip-radio span{min-width:48px;justify-content:center}
+#remBody{display:grid;gap:14px}
+#remBody.dim{opacity:.45}
+.data-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 6px}
+.data-sum>div{text-align:center;padding:10px 4px;border-radius:14px;background:var(--tint)}
+.data-sum b{display:block;font-size:17px}
+.data-sum small{font-size:11.5px}
+.backup-warn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border-radius:16px;margin:6px 0}
+.backup-warn small{color:inherit;opacity:.85}
+.ok-line{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--success);margin:6px 0}
+.ok-line .svg{width:16px;height:16px}
+.guide-search{display:flex;align-items:center;gap:8px;padding:4px 14px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--line);margin-bottom:10px}
+.guide-search .svg{color:var(--muted)}
+.guide-search input{border:0;background:transparent;box-shadow:none;min-height:44px;padding:6px 0}
+.guide-search input:focus-visible{outline:none}
+.toc{margin-bottom:12px}
+.toc .chip{background:var(--glass);color:var(--ink);border:1px solid var(--line);font-size:13px;min-height:36px}
+.formula{margin:8px 0;padding:10px 14px;border-left:3px solid var(--accent);border-radius:0 12px 12px 0;background:var(--tint);font-weight:620;font-size:14.5px}
+.formula small{display:inline;font-weight:500}
+.rate-top strong{white-space:nowrap}
