@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Calendario con media quincena marcada y una moneda: horarios + cobro. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
     <path android:fillColor="#FF0A6F66" android:pathData="M0,0h108v108h-108z" />
-    <path android:fillColor="#00000000" android:strokeColor="#FFFFFFFF" android:strokeWidth="5"
-        android:pathData="M54,28a26,26 0,1 0,0 52a26,26 0,1 0,0 -52" />
-    <path android:fillColor="#FFFFFFFF" android:pathData="M54,28a26,26 0,0 0,0 52z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M30,34h40a6,6 0,0 1,6 6v34a6,6 0,0 1,-6 6H30a6,6 0,0 1,-6 -6V40a6,6 0,0 1,6 -6z" />
+    <path android:fillColor="#FFFF8A65" android:pathData="M30,34h40a6,6 0,0 1,6 6v6H24v-6a6,6 0,0 1,6 -6z" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="5" android:strokeLineCap="round" android:pathData="M38,29v8M62,29v8" />
+    <path android:fillColor="#FF0A6F66" android:pathData="M31,51h6v6h-6zM41,51h6v6h-6zM51,51h6v6h-6zM31,60h6v6h-6zM41,60h6v6h-6z" />
+    <path android:fillColor="#FFCFE5E1" android:pathData="M31,69h6v6h-6zM41,69h6v6h-6z" />
+    <path android:fillColor="#FFFFC44D" android:strokeColor="#FF0A6F66" android:strokeWidth="4" android:pathData="M55,70a15,15 0,1 0,30 0a15,15 0,1 0,-30 0z" />
+    <path android:strokeColor="#FF0A6F66" android:strokeWidth="3.2" android:strokeLineCap="round" android:pathData="M75,64.5c-1,-1.6 -2.6,-2.5 -4.8,-2.5c-2.8,0 -4.7,1.5 -4.7,3.6c0,4.8 10.2,2.6 10.2,7.6c0,2.2 -2,3.8 -5.2,3.8c-2.3,0 -4.2,-1 -5.3,-2.8M70.2,59v22" />
 </vector>

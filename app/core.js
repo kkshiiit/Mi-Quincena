@@ -1,5 +1,6 @@
 (function(root){
 'use strict';
+const ACCENTS=['teal','blue','violet','pink','orange','green','amber','red'];
 const statuses=['','Presente','Ausente','Franco','Feriado','Licencia'];
 const round=n=>Math.round((n+Number.EPSILON)*100)/100;
 const limit=1000000000;
@@ -16,6 +17,7 @@ function validateRow(r){
  if(r.status!=='Presente'&&(r.start||r.end))throw Error('Los horarios requieren asistencia Presente');
  if(r.status==='Presente'&&!r.start)throw Error('Una jornada presente requiere entrada y salida');
  if(r.paid!==undefined&&typeof r.paid!=='boolean')throw Error('Estado de pago inválido');
+ if(r.multiplier!==undefined&&(!Number.isFinite(r.multiplier)||r.multiplier<=0||r.multiplier>10))throw Error('Multiplicador de pago inválido (entre 0,1 y 10)');
  return r;
 }
 function ruleFor(rules,date){return [...rules].sort((a,b)=>b.from.localeCompare(a.from)).find(r=>r.from<=date);}
@@ -42,8 +44,9 @@ function calc(r,rules){
   if(r.status==='Presente'&&rule.dayPolicy==='proportional')factor=Math.min(1,normal/rule.hours);
   base=rule.rate*factor;
  }else if(rule.mode==='hour')base=normal*rule.rate;
- const legacyTotal=round(base+extra*rule.extra),extraPay=round(extra*rule.extra);base=round(base);
- return {hours,normal,extra,base,extraPay,total:rule.calculationVersion===2?round(base+extraPay):legacyTotal,configured:true};
+ const mult=r.multiplier||1;base*=mult;
+ const legacyTotal=round(base+extra*rule.extra*mult),extraPay=round(extra*rule.extra*mult);base=round(base);
+ return {hours,normal,extra,base,extraPay,multiplier:mult,total:rule.calculationVersion===2?round(base+extraPay):legacyTotal,configured:true};
 }
 function dates(month,part='all'){
  if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)||!['1','2','all'].includes(part)||!validDate(month+'-01'))throw Error('Período inválido');
@@ -70,7 +73,9 @@ function validateState(s){
   if(typeof s.settings!=='object'||!s.settings||Array.isArray(s.settings))throw Error('Preferencias inválidas');
   const c=s.settings;
   if(c.theme!==undefined&&!['system','light','dark','amoled'].includes(c.theme))throw Error('Tema inválido');
-  if(c.name!==undefined&&(typeof c.name!=='string'||c.name.length>80))throw Error('Nombre inválido');
+  for(const k of ['name','employer','job'])if(c[k]!==undefined&&(typeof c[k]!=='string'||c[k].length>80))throw Error('Perfil inválido');
+  if(c.accent!==undefined&&!ACCENTS.includes(c.accent))throw Error('Color de acento inválido');
+  if(c.defaultPart!==undefined&&!['auto','all'].includes(c.defaultPart))throw Error('Preferencia de período inválida');
   for(const k of ['reduceTransparency','reduceMotion','reminder'])if(c[k]!==undefined&&typeof c[k]!=='boolean')throw Error('Preferencia inválida');
   if(c.reminderTime!==undefined)minutes(c.reminderTime);
   if(c.reminderDays!==undefined&&(!Array.isArray(c.reminderDays)||c.reminderDays.some(d=>!Number.isInteger(d)||d<0||d>6)))throw Error('Días de recordatorio inválidos');
@@ -78,7 +83,7 @@ function validateState(s){
  if(s.templates!==undefined){if(!Array.isArray(s.templates)||s.templates.length>100)throw Error('Plantillas inválidas');for(const t of s.templates)validateRow({...t,date:'2026-01-01',note:'',status:'Presente'});}
  return s;
 }
-function migrate(s){validateState(s);const n=JSON.parse(JSON.stringify(s));n.version=2;n.settings=Object.assign({theme:'system',reduceTransparency:false,reduceMotion:false,name:'',reminder:false,reminderTime:'18:00',reminderDays:[1,2,3,4,5]},n.settings||{});n.adjustments=n.adjustments||[];n.closed=n.closed||[];n.templates=n.templates||[];n.payments=n.payments.map(p=>({...p,allocatedDate:allocatedDate(p)}));return n;}
+function migrate(s){validateState(s);const n=JSON.parse(JSON.stringify(s));n.version=2;n.settings=Object.assign({theme:'system',accent:'teal',employer:'',job:'',reduceTransparency:false,reduceMotion:false,name:'',reminder:false,reminderTime:'18:00',reminderDays:[1,2,3,4,5]},n.settings||{});n.adjustments=n.adjustments||[];n.closed=n.closed||[];n.templates=n.templates||[];n.payments=n.payments.map(p=>({...p,allocatedDate:allocatedDate(p)}));return n;}
 function periodKey(date){return date.slice(0,7)+':'+(+date.slice(8)<=15?'1':'2');}
 function relevantRules(rules,month,part){const ds=dates(month,part),keys=new Set(ds.map(d=>ruleFor(rules,d)?.from));return rules.filter(r=>keys.has(r.from));}
 function prevPeriod(k){if(k.endsWith(':2'))return k.slice(0,7)+':1';const [y,m]=k.slice(0,7).split('-').map(Number),d=new Date(y,m-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+':2';}
@@ -91,7 +96,7 @@ function norm(t){return String(t??'').normalize('NFD').replace(/[̀-ͯ]/g,'').to
 function dateWords(d){if(!validDate(d))return '';const [y,m,dd]=d.split('-'),wd=new Date(d+'T12:00:00Z').getUTCDay();return [d,dd+'/'+m+'/'+y,dd+'/'+m,+dd+'/'+(+m),DAYS[wd],MONTHS[+m-1],y].join(' ');}
 function amountWords(n){const a=Math.abs(n),i=Math.trunc(a);return [String(i),String(a),i.toLocaleString('es-AR'),i.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')].join(' ');}
 // Haystack for search: kind is 'row' | 'payment' | 'adjustment'.
-function searchText(kind,o){if(kind==='row')return norm([dateWords(o.date),o.place,o.note,o.status||'sin registrar',o.start,o.end].join(' '));if(kind==='payment')return norm(['cobro',dateWords(o.date),dateWords(allocatedDate(o)),amountWords(o.amount),o.note].join(' '));return norm(['ajuste',dateWords(o.date),amountWords(o.amount),o.note].join(' '));}
+function searchText(kind,o){if(kind==='row')return norm([dateWords(o.date),o.place,o.note,o.status||'sin registrar',o.start,o.end,o.multiplier>1?(o.multiplier===2?'doble x2':'x'+o.multiplier):''].join(' '));if(kind==='payment')return norm(['cobro',dateWords(o.date),dateWords(allocatedDate(o)),amountWords(o.amount),o.note].join(' '));return norm(['ajuste',dateWords(o.date),amountWords(o.amount),o.note].join(' '));}
 function matches(hay,q){const words=norm(q).split(/\s+/).filter(Boolean);return words.length>0&&words.every(w=>hay.includes(w));}
-const api={statuses,round,minutes,validDate,validateRow,validateRule,ruleFor,calc,dates,summarize,validateState,migrate,allocatedDate,monthlyDay,periodKey,relevantRules,prevPeriod,history,carryOver,norm,searchText,matches};if(typeof module!=='undefined')module.exports=api;root.Core=api;
+const api={ACCENTS,statuses,round,minutes,validDate,validateRow,validateRule,ruleFor,calc,dates,summarize,validateState,migrate,allocatedDate,monthlyDay,periodKey,relevantRules,prevPeriod,history,carryOver,norm,searchText,matches};if(typeof module!=='undefined')module.exports=api;root.Core=api;
 })(typeof window!=='undefined'?window:globalThis);

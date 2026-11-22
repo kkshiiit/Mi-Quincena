@@ -37,3 +37,18 @@ for (const q of ['52000', '52.000', 'transferencia', '02/12', 'cobro']) assert.o
 // AMOLED theme survives validation
 assert.doesNotThrow(() => Core.validateState({ ...state, settings: { ...state.settings, theme: 'amoled' } }));
 console.log('search ok');
+
+// Pago multiplicado (doble, 1.5)
+const rules2 = [{ from: '2026-01-01', mode: 'day', rate: 1000, extra: 100, hours: 8, calculationVersion: 2 }];
+const dbl = { date: '2026-01-05', place: '', start: '08:00', end: '18:00', status: 'Presente', note: '', breakMinutes: 0, overnight: false, multiplier: 2 };
+assert.strictEqual(Core.calc(dbl, rules2).total, 2400);
+assert.strictEqual(Core.calc({ ...dbl, multiplier: 1.5 }, rules2).total, 1800);
+assert.strictEqual(Core.calc({ ...dbl, multiplier: undefined }, rules2).total, 1200);
+assert.throws(() => Core.validateRow({ ...dbl, multiplier: 0 }));
+assert.throws(() => Core.validateRow({ ...dbl, multiplier: 11 }));
+assert.ok(Core.matches(Core.searchText('row', dbl), 'doble'));
+const hourRules = [{ from: '2026-01-01', mode: 'hour', rate: 100, extra: 0, hours: 8, calculationVersion: 2 }];
+assert.strictEqual(Core.calc({ ...dbl, end: '16:00' }, hourRules).total, 1600);
+assert.doesNotThrow(() => Core.validateState({ ...state, settings: { ...state.settings, accent: 'violet', employer: 'X', job: 'Y' } }));
+assert.throws(() => Core.validateState({ ...state, settings: { ...state.settings, accent: '#fff' } }));
+console.log('multiplier ok');

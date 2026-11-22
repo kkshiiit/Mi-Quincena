@@ -55,7 +55,7 @@ Cuando la app corre en un navegador común, `window.Android` no existe y se usan
 Es un proyecto de [apktool](https://apktool.org): manifiesto, recursos y código `smali`. Los cambios hechos sobre el original fueron:
 
 - **`res/values-v35/styles.xml`:** `windowOptOutEdgeToEdgeEnforcement`, para que el contenido no quede debajo de la barra de estado en Android 15.
-- **`res/drawable/icon.xml`:** ícono vectorial (medio círculo = las dos quincenas).
+- **`res/drawable/icon.xml`:** ícono vectorial (calendario con media quincena marcada y una moneda).
 - **`res/values-v31/styles.xml`:** pantalla de inicio.
 - **`ExportProvider.smali` → `getType`:** devuelve el tipo correcto para `.pdf`, `.png`, `.docx`, `.xlsx` y `.txt`, para que las otras apps reconozcan los archivos compartidos.
 - **`MainActivity$Bridge.smali`:** campo `darkColor` y método `setDarkColor`.

@@ -138,3 +138,12 @@ Revisá que el cobro esté imputado a una fecha de esa quincena.
 
 **¿Por qué aparece “Sin tarifa”?**
 No hay una tarifa vigente para esa fecha. Creá una con una fecha de inicio anterior.
+
+
+## Novedades 3.3
+
+- **Pago del día** (Normal, ×1,5, Doble ×2, Triple ×3 u Otro): al registrar un día elegí cuánto te lo pagan. Multiplica base y extras solo de ese día.
+- **Lugares frecuentes**: tocá un lugar sugerido para no escribirlo.
+- **Pagos** rediseñada: saldo, acciones rápidas (cobrar saldo completo), liquidación y movimientos con colores.
+- **Ajustes** reorganizado: perfil (nombre, puesto, empleador), apariencia con colores de acento, datos y ayuda.
+- Menos animaciones y desenfoque para que la app sea más liviana.
