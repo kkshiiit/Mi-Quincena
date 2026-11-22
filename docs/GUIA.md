@@ -157,3 +157,13 @@ No hay una tarifa vigente para esa fecha. Creá una con una fecha de inicio ante
 - **Recordatorios**: horas sugeridas, días como botones, atajos (Lun a vie, Todos…) y “Próximo aviso”.
 - **Tus datos**: resumen (días, cobros, tarifas, tamaño), aviso si hace más de 14 días que no exportás una copia, versiones con fecha relativa, borrar todo con confirmación.
 - **Guía**: buscador, índice y la sección “Cómo se calcula todo” con las fórmulas.
+
+## Novedades 3.5 — Exportación
+
+- Todos los formatos usan los mismos datos: nombre, puesto y empleador, pago especial (×2), ajustes y cobros.
+- **PDF**: tarjetas de resumen, liquidación, tablas con totales, ajustes, cobros, líneas de firma y número de página.
+- **Excel**: horas en formato h:mm, importes en $, columna “Pago del día”, fila de totales con fórmulas, hojas Tarifas/Cobros/Ajustes en español. Se puede volver a importar (incluye el ×2).
+- **Word**: mismo diseño que el PDF, columnas fijas y firmas.
+- **Imagen**: muestra todas las jornadas que entran (se agranda hasta formato historia), con lugar, horario, extras y ×2.
+- **WhatsApp**: puesto, ajustes, cobros y días especiales.
+- Archivos con nombre claro: `Mi-Quincena_2026-11_2a-quincena_tu-nombre.pdf`.
