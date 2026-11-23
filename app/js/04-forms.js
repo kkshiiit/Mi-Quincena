@@ -1515,12 +1515,14 @@ function functionsSection() {
       'Tapa la app en recientes y bloquea capturas de pantalla',
       prefsGet('secure') === '1',
     ) +
-    sw(
-      'lock',
-      'Bloqueo con PIN',
-      'Pide el PIN al abrir y al volver después de 1 minuto. 5 errores = esperar',
-      !!prefsGet('pin'),
-    ) +
+    sw('lock', 'Bloqueo con PIN', 'Pide el PIN al abrir la app y al volver. 5 errores = esperar', !!prefsGet('pin')) +
+    (prefsGet('pin')
+      ? '<label class="lock-after">Pedir el PIN al volver<select data-lock-after aria-label="Cuándo pedir el PIN">' +
+        LOCK_OPTS.map(
+          ([v, t]) => '<option value="' + v + '"' + (lockAfter() === v ? ' selected' : '') + '>' + t + '</option>',
+        ).join('') +
+        '</select><small>Si salís de la app menos tiempo que esto, entrás sin PIN. Al reiniciar el teléfono siempre lo pide.</small></label>'
+      : '') +
     (prefsGet('pin') && bioReady()
       ? sw('bio', 'Desbloquear con huella', 'Si la huella falla, podés usar el PIN', prefsGet('bio') === '1')
       : '') +

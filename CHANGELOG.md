@@ -1,5 +1,9 @@
 # Cambios
 
+## 3.9.6
+- **Pedir el PIN al volver**, a elección: siempre, o después de 1, 2, 5 o 15 minutos fuera de la app (antes era fijo en 1 minuto).
+- El tiempo fuera se mide con el reloj de Android que no se puede adelantar; si la app se cierra y se abre de nuevo dentro del tiempo elegido, tampoco pide PIN. Al reiniciar el teléfono, siempre lo pide.
+
 ## 3.9.5
 - La espera tras 5 PIN incorrectos usa el reloj desde el encendido del teléfono (`SystemClock.elapsedRealtime`) y el número de encendido: **cambiar la hora no la acorta**, y reiniciar el teléfono la vuelve a contar completa.
 - El aviso de día de cobro **ya no depende de abrir la app**: si no hay fechas preparadas, Android calcula solo si hoy es día de cobro según los días configurados.

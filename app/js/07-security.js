@@ -266,7 +266,42 @@ function pinVerify(title, done) {
   });
 }
 
+// Cuánto tiempo fuera de la app se tolera sin volver a pedir el PIN (a elección del usuario).
+const LOCK_OPTS = [
+  [0, 'Siempre, apenas salís'],
+  [60, 'Después de 1 minuto'],
+  [120, 'Después de 2 minutos'],
+  [300, 'Después de 5 minutos'],
+  [900, 'Después de 15 minutos'],
+];
+function lockAfter() {
+  const v = prefsGet('lock-after');
+  return v === '' || isNaN(Number(v)) ? 60 : Number(v);
+}
+function markAway() {
+  const c = nativeClock();
+  prefsSet('away', JSON.stringify({ e: c ? c.e : 0, boot: c ? c.boot : -1, wall: Date.now() }));
+}
+// Segundos fuera de la app. Al abrir en frío solo se confía en el reloj de Android (no en la hora del
+// teléfono, que se puede cambiar): sin él, o tras reiniciar, se considera “mucho tiempo” y se pide el PIN.
+function awaySeconds(cold) {
+  let a = null;
+  try {
+    a = JSON.parse(prefsGet('away') || 'null');
+  } catch (e) {}
+  if (!a) return Infinity;
+  const c = nativeClock();
+  if (c && a.boot === c.boot && c.e >= a.e) return (c.e - a.e) / 1000;
+  if (cold || c) return Infinity;
+  return Math.max(0, (Date.now() - a.wall) / 1000);
+}
+function shouldLock(cold) {
+  const s = lockAfter();
+  return s === 0 || !(awaySeconds(cold) < s);
+}
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) hiddenAt = Date.now();
-  else if (hiddenAt && Date.now() - hiddenAt > 60000) lockScreen();
+  if (document.hidden) {
+    hiddenAt = Date.now();
+    markAway();
+  } else if (hiddenAt && shouldLock(false)) lockScreen();
 });

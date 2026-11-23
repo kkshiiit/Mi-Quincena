@@ -594,3 +594,5 @@ dialog::backdrop{background:var(--backdrop);-webkit-backdrop-filter:blur(6px);ba
 #ask input{margin-top:10px}
 #ask .actions{margin-top:16px}
 .primary.danger-fill,.primary.danger-fill:hover{background:var(--danger);border-color:transparent;color:var(--bg)}
+.lock-after{padding:4px 0 12px;border-top:1px solid var(--hair);color:var(--ink);font-size:15px;font-weight:650}
+.lock-after small{font-weight:500}

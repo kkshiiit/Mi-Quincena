@@ -62,6 +62,18 @@ const fail = m => { console.error('✗ ' + m); process.exitCode = 1; };
       return [a, b, c];
     });
     if (clk.join() !== '30000,20000,30000') fail('espera del PIN con reloj: ' + clk);
+    // Desbloqueo rápido: no pide PIN si volvés antes del tiempo elegido; al reiniciar, siempre.
+    const away = await p.evaluate(() => {
+      let E = 5e6, B = 2; const keep = window.Android;
+      window.Android = { clock: () => JSON.stringify({ e: E, boot: B }), preference: k => localStorage.getItem('mq-' + k) || '', preferenceSave: (k, v) => localStorage.setItem('mq-' + k, v) };
+      const r = [];
+      prefsSet('lock-after', '300'); markAway(); E += 120000; r.push(shouldLock(true));
+      E += 240000; r.push(shouldLock(true));
+      prefsSet('lock-after', '0'); markAway(); E += 1000; r.push(shouldLock(false));
+      prefsSet('lock-after', '300'); markAway(); B = 3; E = 10; r.push(shouldLock(true));
+      prefsSet('lock-after', ''); window.Android = keep; return r;
+    });
+    if (away.join() !== 'false,true,true,true') fail('desbloqueo rápido: ' + away);
     if (errs.length) fail(width + 'px errores: ' + errs.join(' | '));
     await p.close();
   }
