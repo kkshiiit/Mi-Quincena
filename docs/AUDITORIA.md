@@ -26,7 +26,7 @@ Revisión completa de `app/`, `android/`, `tests/`, `scripts/` y CI.
 ## Deuda técnica (recomendado, no urgente)
 
 1. ~~**`style.css` en capas**~~ **Resuelto en 3.9.2:** reescrito por componentes; temas y transparencia solo cambian variables. Verificado con 120 capturas comparadas píxel a píxel (`tests/visual/`).
-2. **`app.js` de 140 KB en pocas líneas largas**: difícil de revisar en diffs. Conviene dividirlo en módulos (pantallas, formularios, exportar, nativo) con un empaquetado simple, o al menos formatearlo.
+2. ~~**`app.js` de 140 KB**~~ **Resuelto en 3.9.3:** dividido en 10 archivos formateados en `app/js/`.
 3. **HTML armado con cadenas**: funciona y está escapado, pero una función de plantillas o `lit-html` reduciría el riesgo de olvidar un `esc`.
 4. **`confirm()`/`prompt()` nativos** (15 usos): no siguen el diseño ni el modo oscuro. Conviene un diálogo propio.
 5. **El bloqueo depende del reloj del teléfono**: cambiar la hora acorta la espera tras 5 errores. Mitigable guardando también el tiempo de arranque del sistema (`SystemClock.elapsedRealtime`) desde Android.

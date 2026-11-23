@@ -20,11 +20,13 @@ DIST="$ROOT/dist"
 
 node "$ROOT/tests/core.test.js"
 node "$ROOT/tests/fuzz.test.js"
+node "$ROOT/tests/version.test.js"
 
 rm -rf "$WORK" && mkdir -p "$WORK" "$DIST"
 cp -r "$ROOT/android" "$WORK/project"
 mkdir -p "$WORK/project/assets"
 cp "$ROOT"/app/*.html "$ROOT"/app/*.js "$ROOT"/app/*.css "$WORK/project/assets/"
+cp -r "$ROOT/app/js" "$WORK/project/assets/js"
 
 java -jar "$APKTOOL_JAR" b "$WORK/project" -o "$WORK/unsigned.apk"
 

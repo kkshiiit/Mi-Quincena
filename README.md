@@ -9,7 +9,7 @@ Registrás cada día que trabajás y la app calcula sola cuánto generaste, cuá
 
 [![Descargar APK](https://img.shields.io/badge/Descargar-APK%20para%20Android-0a6f66?style=for-the-badge&logo=android&logoColor=white)](https://github.com/kkshiiit/Mi-Quincena/releases/latest)
 [![CI](https://img.shields.io/github/actions/workflow/status/kkshiiit/Mi-Quincena/ci.yml?branch=main&style=for-the-badge&label=tests)](https://github.com/kkshiiit/Mi-Quincena/actions)
-![Versión](https://img.shields.io/badge/versión-3.9.2-152e4d?style=for-the-badge)
+![Versión](https://img.shields.io/badge/versión-3.9.3-152e4d?style=for-the-badge)
 ![Sin internet](https://img.shields.io/badge/sin%20internet-sin%20cuenta-ffc93c?style=for-the-badge)
 
 <img src="docs/img/quincena.png" width="200" alt="Pantalla Quincena">
@@ -70,7 +70,9 @@ Todo al centavo, con la tarifa vigente en cada fecha. Verificado con tests y una
 ```
 app/        Interfaz y lógica (HTML, CSS y JavaScript puro, sin frameworks)
   core.js        Cálculos puros y testeados
-  app.js         Pantallas, formularios, exportaciones
+  js/            Interfaz en 10 archivos, cargados en orden:
+    01-util  02-state  03-views  04-forms  05-data
+    06-export  07-security  08-search  09-guide  10-main
   style.css      Diseño y temas
   logo.js        Ícono embebido
 android/    Contenedor nativo (proyecto apktool: manifiesto, recursos, smali)

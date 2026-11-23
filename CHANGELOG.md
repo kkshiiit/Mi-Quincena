@@ -1,5 +1,11 @@
 # Cambios
 
+## 3.9.3
+- `app.js` (140 KB en pocas líneas) dividido en 10 archivos legibles en `app/js/`: utilidades, estado, pantallas, formularios, datos, exportar, seguridad, búsqueda, guía y arranque.
+- Código formateado con Prettier (`npm run format`) y `.prettierrc`.
+- Test que verifica que `index.html` carga todos los módulos y en orden.
+- Sin cambios de comportamiento: 120 capturas idénticas, mismas exportaciones y flujos.
+
 ## 3.9.2
 - `style.css` reescrito por componentes (11 secciones), sin capas de versiones viejas: 45 → 41 KB, `!important` de 14 a 4.
 - Temas y “Reducir transparencia” cambian solo variables: ningún componente puede volver a perder su color.
