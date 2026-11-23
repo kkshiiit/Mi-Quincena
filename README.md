@@ -92,7 +92,7 @@ Cada push corre los tests y compila un APK de prueba (Actions → artefacto). Al
 
 **Firma:** sin clave se firma con una clave de prueba. Para que las actualizaciones se instalen encima, cargá en *Settings → Secrets → Actions*: `MQ_KEYSTORE_B64` (tu `.jks` en base64), `MQ_KEY_ALIAS` y `MQ_KEY_PASS`. Nunca subas la clave al repositorio.
 
-Más detalle: [Arquitectura](docs/ARQUITECTURA.md) · [Privacidad](docs/PRIVACIDAD.md) · [Auditoría](docs/AUDITORIA.md) · [Cambios](CHANGELOG.md)
+Más detalle: [Firma](docs/FIRMA.md) · [Arquitectura](docs/ARQUITECTURA.md) · [Privacidad](docs/PRIVACIDAD.md) · [Auditoría](docs/AUDITORIA.md) · [Cambios](CHANGELOG.md)
 
 ## 🙌 Créditos
 
