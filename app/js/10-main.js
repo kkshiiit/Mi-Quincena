@@ -1,7 +1,7 @@
 // Arranque: acciones, botones fijos y primer dibujo. Se carga último.
 'use strict';
 
-function action(a) {
+async function action(a) {
   if (a === 'new') editRow(today());
   if (a === 'rule') ruleForm();
   if (a === 'rates') ratesView();
@@ -30,8 +30,9 @@ function action(a) {
   }
   if (a === 'carry') carryForm();
   if (a === 'wipe') {
-    const t = prompt(
-      'Esto borra jornadas, tarifas, cobros y ajustes (no tus preferencias). Exportá una copia antes.\n\nEscribí BORRAR para confirmar.',
+    const t = await ask(
+      'Se borran jornadas, tarifas, cobros y ajustes (no tus preferencias). Podés deshacerlo enseguida, pero exportá una copia antes.',
+      { title: '¿Borrar todos los datos?', input: 'Escribí BORRAR', ok: 'Borrar todo', danger: true },
     );
     if (t && t.trim().toUpperCase() === 'BORRAR')
       mutate(() => {
@@ -67,10 +68,11 @@ function action(a) {
     const key = month() + ':' + part(),
       closed = state.closed.includes(key);
     if (
-      confirm(
+      await ask(
         closed
           ? '¿Reabrir esta quincena para corregir registros?'
           : '¿Cerrar esta quincena? No marca el saldo como cobrado. Se bloquean cambios en jornadas, ajustes y tarifas.',
+        { title: closed ? 'Reabrir quincena' : 'Cerrar quincena', ok: closed ? 'Reabrir' : 'Cerrar' },
       )
     )
       mutate(

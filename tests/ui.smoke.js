@@ -10,7 +10,7 @@ const fail = m => { console.error('✗ ' + m); process.exitCode = 1; };
   for (const width of [320, 390, 800]) {
     const p = await browser.newPage({ viewport: { width, height: 760 } });
     const errs = []; p.on('pageerror', e => errs.push(e.message));
-    p.on('dialog', d => d.accept('BORRAR'));
+    p.on('dialog', d => { errs.push('diálogo nativo: ' + d.message()); d.dismiss(); });
     await p.goto(URL);
     await p.evaluate(() => { state.rules = [{ from: '2026-01-01', mode: 'day', rate: 50000, extra: 0, extraCalc: 'percent', extraPct: 50, hours: 8, calculationVersion: 2 }]; save(); });
     const overflow = tag => p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth).then(o => o && fail(width + 'px desborde en ' + tag));
@@ -31,6 +31,28 @@ const fail = m => { console.error('✗ ' + m); process.exitCode = 1; };
     await p.evaluate(() => paymentForm(null, null, '2026-11:1')); await p.click('#payAllBtn'); await p.click('#paymentForm [type=submit]');
     if (await p.evaluate(() => Core.summarize(state, '2026-11', '1').balance) !== 0) fail('el cobro no saldó la quincena');
     await p.evaluate(async () => { window.download = () => {}; const o = { pending: true, total: true, paid: true, detail: true }; $('month').value = '2026-11'; $('part').value = '1'; shareTextBody(o); shareImage(o); await exportPdf(o); await exportExcel('pay', o); await exportDocx(o); });
+    // Diálogos de confirmación propios (sin confirm/prompt nativos).
+    const askVisible = () => p.evaluate(() => !!document.getElementById('ask')?.open);
+    await p.evaluate(() => editRow('2026-11-10'));
+    await p.waitForSelector('#deleteRow');
+    await p.click('#deleteRow');
+    if (!(await askVisible()) || !(await p.evaluate(() => $('dialog').open))) fail('confirmación no aparece encima del formulario');
+    await p.click('#askNo');
+    if (!(await p.evaluate(() => state.rows.some(r => r.date === '2026-11-10')))) fail('cancelar borró el día');
+    await p.click('#deleteRow'); await p.keyboard.press('Escape');
+    if (!(await p.evaluate(() => state.rows.some(r => r.date === '2026-11-10')))) fail('Escape borró el día');
+    await p.click('#deleteRow'); await p.click('#askOk');
+    if (await p.evaluate(() => state.rows.some(r => r.date === '2026-11-10' && r.status))) fail('confirmar no borró el día');
+    await p.evaluate(() => { if ($('dialog').open) closeModal(); go('settings'); });
+    await p.click('[data-feature=specialPay]'); await p.click('#askNo');
+    if (await p.evaluate(() => state.settings.specialPay.enabled)) fail('cancelar activó pago especial');
+    await p.click('[data-feature=specialPay]'); await p.click('#askOk');
+    if (!(await p.evaluate(() => state.settings.specialPay.enabled))) fail('no activó pago especial');
+    await p.evaluate(() => { action('wipe'); }); await p.fill('#askIn', 'hola'); await p.click('#askOk');
+    if (!(await p.evaluate(() => state.rules.length))) fail('borró sin escribir BORRAR');
+    await p.evaluate(() => { action('wipe'); }); await p.fill('#askIn', 'borrar'); await p.click('#askOk');
+    if (await p.evaluate(() => state.rules.length)) fail('no borró con BORRAR');
+    if (await p.evaluate(() => /confirm\(|prompt\(/.test([...document.scripts].map(s => s.text).join('')))) fail('quedan diálogos nativos');
     if (errs.length) fail(width + 'px errores: ' + errs.join(' | '));
     await p.close();
   }

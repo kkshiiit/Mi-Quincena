@@ -1183,7 +1183,7 @@
 
     invoke-direct {v1, p0}, Lar/miquincena/MainActivity$$ExternalSyntheticLambda8;-><init>(Lar/miquincena/MainActivity;)V
 
-    const-string v2, "(function(){var t=document.getElementById(\'search\');if(t&&!t.hidden){closeSearch();return true;}var d=document.getElementById(\'dialog\');if(d.open){d.close();return true;}if(tabName!==\'summary\'){go(\'summary\');return true;}return false;})()"
+    const-string v2, "(function(){var a=document.getElementById(\'ask\');if(a&&a.open){a.dispatchEvent(new Event(\'cancel\'));return true;}var t=document.getElementById(\'search\');if(t&&!t.hidden){closeSearch();return true;}var d=document.getElementById(\'dialog\');if(d.open){d.close();return true;}if(tabName!==\'summary\'){go(\'summary\');return true;}return false;})()"
 
     invoke-virtual {v0, v2, v1}, Landroid/webkit/WebView;->evaluateJavascript(Ljava/lang/String;Landroid/webkit/ValueCallback;)V
 
