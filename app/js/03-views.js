@@ -651,6 +651,17 @@ function settingsView() {
 }
 
 function bind(root = document) {
+  root.querySelectorAll('[data-lock-after]').forEach(
+    el =>
+      (el.onchange = () => {
+        prefsSet('lock-after', el.value);
+        toast(
+          Number(el.value)
+            ? 'Listo: el PIN se pide si salís más de ' + el.selectedOptions[0].text.replace('Después de ', '') + '.'
+            : 'Listo: el PIN se pide siempre que vuelvas.',
+        );
+      }),
+  );
   const on = (q, f) => root.querySelectorAll(q).forEach(b => (b.onclick = () => f(b)));
   on('[data-edit]', b => editRow(b.dataset.edit));
   on('[data-go]', b => go(b.dataset.go));

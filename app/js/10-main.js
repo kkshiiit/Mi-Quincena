@@ -169,4 +169,4 @@ render();
 
 syncNative();
 
-lockScreen();
+if (shouldLock(true)) lockScreen();
