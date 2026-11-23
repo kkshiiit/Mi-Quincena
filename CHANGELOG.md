@@ -1,5 +1,13 @@
 # Cambios
 
+## 3.8.0
+- Ícono ilustrado (moneda surfeando una ola de billetes), adaptable a cualquier forma de ícono de Android.
+- Pantalla de arranque azul noche con el ícono; sin destello blanco al abrir (tema aplicado desde el primer cuadro, fondo claro u oscuro según el sistema).
+- Bienvenida en la primera apertura con los dos primeros pasos.
+- Ya no avisa “días sin registrar” anteriores a tu primer día cargado.
+- Período legible en pantallas chicas.
+- El aviso de cobro solo se reenvía a Android si cambió.
+
 ## 3.7.1
 - Ícono nuevo: nivel de obra cuya burbuja es una moneda (quincena "nivelada" = cobrada justo).
 

@@ -100,5 +100,6 @@ assert.strictEqual(Core.paydays({ first: 31, firstMonth: 'same', second: 31, sec
 // Estadísticas por obra
 const ps = Core.placeStats({ rules: rules2, rows: [{ ...dbl, place: 'Obra A', multiplier: undefined }, { ...dbl, date: '2026-01-06', place: 'obra a ' }, { ...dbl, date: '2026-01-07', place: 'Obra B', multiplier: undefined }] }, '2026-01-01', '2026-01-31');
 assert.strictEqual(ps.list[0].days, 2); assert.strictEqual(ps.list[0].special, 1); assert.strictEqual(ps.tot.days, 3);
-assert.deepStrictEqual(Core.missingDays({ rows: [{ date: '2026-11-02', status: 'Presente' }] }, '2026-11', '1', '2026-11-04'), ['2026-11-01', '2026-11-03']);
+assert.deepStrictEqual(Core.missingDays({ rows: [{ date: '2026-11-02', status: 'Presente' }] }, '2026-11', '1', '2026-11-05'), ['2026-11-03', '2026-11-04']);
+assert.deepStrictEqual(Core.missingDays({ rows: [] }, '2026-11', '1', '2026-11-05'), []);
 console.log('features ok');}
