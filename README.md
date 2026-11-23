@@ -9,7 +9,7 @@ Registrás cada día que trabajás y la app calcula sola cuánto generaste, cuá
 
 [![Descargar APK](https://img.shields.io/badge/Descargar-APK%20para%20Android-0a6f66?style=for-the-badge&logo=android&logoColor=white)](https://github.com/kkshiiit/Mi-Quincena/releases/latest)
 [![CI](https://img.shields.io/github/actions/workflow/status/kkshiiit/Mi-Quincena/ci.yml?branch=main&style=for-the-badge&label=tests)](https://github.com/kkshiiit/Mi-Quincena/actions)
-![Versión](https://img.shields.io/badge/versión-3.9.0-152e4d?style=for-the-badge)
+![Versión](https://img.shields.io/badge/versión-3.9.1-152e4d?style=for-the-badge)
 ![Sin internet](https://img.shields.io/badge/sin%20internet-sin%20cuenta-ffc93c?style=for-the-badge)
 
 <img src="docs/img/quincena.png" width="200" alt="Pantalla Quincena">
@@ -80,7 +80,8 @@ docs/       Guía, arquitectura, privacidad, capturas
 ```
 
 ```bash
-npm test                 # tests de cálculo + 3000 escenarios
+npm test                 # cálculos, 3000 escenarios y versión
+npm run test:ui          # prueba de interfaz (necesita playwright)
 npm run serve            # probar la interfaz en http://localhost:8765
 APKTOOL_JAR=… SIGNER_JAR=… npm run build   # APK en dist/
 ```
@@ -89,7 +90,7 @@ Cada push corre los tests y compila un APK de prueba (Actions → artefacto). Al
 
 **Firma:** sin clave se firma con una clave de prueba. Para que las actualizaciones se instalen encima, cargá en *Settings → Secrets → Actions*: `MQ_KEYSTORE_B64` (tu `.jks` en base64), `MQ_KEY_ALIAS` y `MQ_KEY_PASS`. Nunca subas la clave al repositorio.
 
-Más detalle: [Arquitectura](docs/ARQUITECTURA.md) · [Privacidad](docs/PRIVACIDAD.md) · [Cambios](CHANGELOG.md)
+Más detalle: [Arquitectura](docs/ARQUITECTURA.md) · [Privacidad](docs/PRIVACIDAD.md) · [Auditoría](docs/AUDITORIA.md) · [Cambios](CHANGELOG.md)
 
 ## 🙌 Créditos
 

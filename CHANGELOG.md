@@ -1,5 +1,13 @@
 # Cambios
 
+## 3.9.1
+Auditoría de código ([docs/AUDITORIA.md](docs/AUDITORIA.md)):
+- El PIN se guarda con PBKDF2 (210.000 iteraciones); los PIN anteriores se migran solos.
+- Política de seguridad de contenido (CSP): la app no puede cargar nada de afuera.
+- Un error al redibujar ya no deja la pantalla distinta de lo guardado.
+- Con la app bloqueada, nada de atrás recibe foco ni se abren ventanas encima.
+- Versión única verificada por test; prueba de interfaz automática en CI.
+
 ## 3.9.0
 - **Huella digital** para desbloquear (Android 10+), con el PIN como alternativa. Si la huella se bloquea por intentos, avisa y pide el PIN.
 - PIN con **límite de intentos**: cada 5 errores hay que esperar 30 s, 1 min, 2 min… (máx. 15 min), con **cuenta regresiva** visible. Sobrevive a reiniciar la app.
