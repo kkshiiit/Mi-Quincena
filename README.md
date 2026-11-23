@@ -85,7 +85,7 @@ npm run serve            # probar la interfaz en http://localhost:8765
 APKTOOL_JAR=… SIGNER_JAR=… npm run build   # APK en dist/
 ```
 
-Cada push corre los tests y compila un APK de prueba (Actions → artefacto). Al subir una etiqueta `vX.Y.Z` se publica el Release con el APK.
+Cada push corre los tests y compila un APK de prueba (Actions → artefacto). Al llegar a `main` una versión nueva (`package.json`), se publica sola el Release con el APK.
 
 **Firma:** sin clave se firma con una clave de prueba. Para que las actualizaciones se instalen encima, cargá en *Settings → Secrets → Actions*: `MQ_KEYSTORE_B64` (tu `.jks` en base64), `MQ_KEY_ALIAS` y `MQ_KEY_PASS`. Nunca subas la clave al repositorio.
 
