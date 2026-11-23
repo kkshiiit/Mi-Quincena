@@ -13,4 +13,5 @@
 | Copia JSON y Drive | Sin cifrar: contiene nombre, empleador, lugares e importes. Guardala en un lugar privado. |
 | Portapapeles | “Copiar texto” deja el resumen en el portapapeles. |
 | Nombres de archivo | Incluyen tu nombre si lo cargaste en el perfil. |
+| Bloqueo | PIN guardado solo como huella SHA-256 con sal en las preferencias del teléfono (no viaja en copias). 5 errores = espera creciente. La huella la valida Android; la app nunca ve la huella. |
 | Librerías | SheetJS 0.20.3 y jsPDF 4.2.1, empaquetadas en el APK y cargadas solo al exportar o importar. Sin CDN. |
