@@ -491,13 +491,42 @@
     const-string v4, "dates"
     invoke-virtual {v2, v4}, Lorg/json/JSONObject;->optJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
     move-result-object v4
-    if-eqz v4, :done
     const-string v5, ""
+    if-eqz v4, :no_dates
     invoke-virtual {v4, v3, v5}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
     move-result-object v4
+    goto :have_msg
+    :no_dates
+    move-object v4, v5
+    :have_msg
     invoke-virtual {v4}, Ljava/lang/String;->isEmpty()Z
     move-result v5
-    if-nez v5, :done
+    if-eqz v5, :msg_ok
+
+    # Sin fecha preparada (la app no se abrió hace meses): se calcula por regla con el día del mes.
+    invoke-static {}, Ljava/util/Calendar;->getInstance()Ljava/util/Calendar;
+    move-result-object v5
+    const/4 v6, 0x5
+    invoke-virtual {v5, v6}, Ljava/util/Calendar;->get(I)I
+    move-result v7
+    invoke-virtual {v5, v6}, Ljava/util/Calendar;->getActualMaximum(I)I
+    move-result v6
+    const/4 v8, 0x0
+    const-string v5, "first"
+    invoke-virtual {v2, v5, v8}, Lorg/json/JSONObject;->optInt(Ljava/lang/String;I)I
+    move-result v5
+    invoke-static {v5, v6}, Ljava/lang/Math;->min(II)I
+    move-result v5
+    if-eq v5, v7, :generic
+    const-string v5, "second"
+    invoke-virtual {v2, v5, v8}, Lorg/json/JSONObject;->optInt(Ljava/lang/String;I)I
+    move-result v5
+    invoke-static {v5, v6}, Ljava/lang/Math;->min(II)I
+    move-result v5
+    if-ne v5, v7, :done
+    :generic
+    const-string v4, "Hoy es d\u00eda de cobro. Abr\u00ed Mi Quincena para ver cu\u00e1nto te deben y registrar el cobro."
+    :msg_ok
 
     invoke-static {}, Ljava/util/Calendar;->getInstance()Ljava/util/Calendar;
     move-result-object v5

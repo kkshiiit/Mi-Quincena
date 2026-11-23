@@ -48,6 +48,7 @@ La parte nativa expone el objeto `window.Android` (`MainActivity$Bridge`):
 | `setTheme(oscuro)` / `setDarkColor(color)` | Colores de las barras del sistema (negro puro en AMOLED). |
 | `setPayday(json)` | Fechas de cobro (sin importes) para la notificación del día de cobro; pide permiso de notificaciones. |
 | `bioAvailable()` / `bioAuth()` | Huella con `BiometricPrompt`; responde por `window.onBio('ok'|'pin'|'err', código)`. |
+| `clock()` | `{e, boot}`: milisegundos desde el encendido y número de encendido, para la espera del PIN a prueba de cambios de hora. |
 | `setSecure(on)` | Activa o quita `FLAG_SECURE` (oculta en recientes, bloquea capturas). |
 | `preference(k)` / `preferenceSave(k, v)` | Preferencias pequeñas, como borradores u opciones de compartir. |
 
@@ -63,7 +64,7 @@ Es un proyecto de [apktool](https://apktool.org): manifiesto, recursos y código
 - **`res/values-v31/styles.xml`:** pantalla de inicio.
 - **`ExportProvider.smali` → `getType`:** devuelve el tipo correcto para `.pdf`, `.png`, `.docx`, `.xlsx` y `.txt`, para que las otras apps reconozcan los archivos compartidos.
 - **`MainActivity$Bridge.smali`:** campo `darkColor` y método `setDarkColor`.
-- **`ReminderService.smali`:** `checkPayday` (notificación del día de cobro, una vez por día) y `paydayOn` (programa el trabajo periódico aunque el recordatorio diario esté apagado).
+- **`ReminderService.smali`:** `checkPayday` (notificación del día de cobro, una vez por día; usa las fechas que prepara la app y, si no hay, calcula por regla con `first`/`second`) y `paydayOn` (programa el trabajo periódico aunque el recordatorio diario esté apagado).
 - **`MainActivity$Secure.smali` / `MainActivity$AskNotify.smali`:** ejecutan en el hilo de la interfaz `FLAG_SECURE` y el pedido de permiso de notificaciones.
 - **`MainActivity.smali` → `onBackPressed`:** el botón Atrás cierra la búsqueda o el diálogo abierto, o vuelve a Quincena.
 

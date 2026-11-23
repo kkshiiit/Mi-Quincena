@@ -1430,7 +1430,7 @@ async function featureToggle(b) {
         prefsSet('pin', '');
         prefsSet('bio', '');
         prefsSet('pin-fails', '0');
-        prefsSet('pin-until', '0');
+        pinLockSet(0);
         toast('Bloqueo desactivado.');
         render();
       });

@@ -1,5 +1,9 @@
 # Cambios
 
+## 3.9.5
+- La espera tras 5 PIN incorrectos usa el reloj desde el encendido del teléfono (`SystemClock.elapsedRealtime`) y el número de encendido: **cambiar la hora no la acorta**, y reiniciar el teléfono la vuelve a contar completa.
+- El aviso de día de cobro **ya no depende de abrir la app**: si no hay fechas preparadas, Android calcula solo si hoy es día de cobro según los días configurados.
+
 ## 3.9.4
 - Las 15 confirmaciones y el pedido de texto nativos de Android se reemplazaron por un diálogo propio (`ask()`): sigue el tema y el color de acento, se abre encima del formulario sin cerrarlo, tiene título y botones claros (“Eliminar”, “Guardar igual”, “Activar”…) y marca en rojo lo que borra.
 - “Borrar todos los datos” se confirma escribiendo BORRAR en el mismo diálogo.
