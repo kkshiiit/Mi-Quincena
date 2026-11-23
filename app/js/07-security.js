@@ -13,7 +13,7 @@ function syncNative() {
         for (const x of Core.paydays(pd, today(), 8))
           dates[x.date] = 'Hoy deberían pagarte la ' + qLong(x.key) + '. Registrá el cobro en Mi Quincena.';
       {
-        const j = JSON.stringify({ enabled: on, hour: pd.hour, dates });
+        const j = JSON.stringify({ enabled: on, hour: pd.hour, first: pd.first, second: pd.second, dates });
         if (prefsGet('payday-sent') !== j) {
           Android.setPayday(j);
           prefsSet('payday-sent', j);
@@ -71,7 +71,7 @@ function pinSetup(sw) {
     if (f.a.value !== f.b.value) return formError('Los PIN no coinciden.');
     await pinStore(f.a.value);
     prefsSet('pin-fails', '0');
-    prefsSet('pin-until', '0');
+    pinLockSet(0);
     closeModal();
     toast(bioReady() ? 'PIN activado. Podés sumar la huella en Funciones.' : 'Bloqueo con PIN activado.');
     render();
@@ -86,8 +86,34 @@ const bioReady = () => {
   }
 };
 
+// Reloj a prueba de cambios de hora: en Android usa el tiempo desde que se encendió el teléfono
+// (SystemClock.elapsedRealtime) y el número de encendido. Cambiar la hora no acorta la espera; si el
+// teléfono se reinicia, la espera vuelve a contarse completa.
+function nativeClock() {
+  try {
+    return window.Android && Android.clock ? JSON.parse(Android.clock()) : null;
+  } catch (e) {
+    return null;
+  }
+}
+function pinLockSet(ms) {
+  const c = nativeClock();
+  prefsSet('pin-lock', ms ? JSON.stringify({ left: ms, e: c ? c.e : 0, boot: c ? c.boot : -1, wall: Date.now() }) : '');
+  prefsSet('pin-until', '');
+}
 function pinWait() {
-  return Math.max(0, Number(prefsGet('pin-until') || 0) - Date.now());
+  let st = null;
+  try {
+    st = JSON.parse(prefsGet('pin-lock') || 'null');
+  } catch (e) {}
+  if (!st) return 0;
+  const c = nativeClock();
+  if (c && st.boot === c.boot && c.e >= st.e) return Math.max(0, st.left - (c.e - st.e));
+  if (c) {
+    prefsSet('pin-lock', JSON.stringify({ ...st, e: c.e, boot: c.boot }));
+    return st.left;
+  }
+  return Math.max(0, st.wall + st.left - Date.now());
 }
 
 async function pinCheck(v) {
@@ -95,14 +121,14 @@ async function pinCheck(v) {
   if (w) return { ok: false, wait: w };
   if (await pinMatches(v)) {
     prefsSet('pin-fails', '0');
-    prefsSet('pin-until', '0');
+    pinLockSet(0);
     return { ok: true };
   }
   const f = Number(prefsGet('pin-fails') || 0) + 1;
   prefsSet('pin-fails', String(f));
   if (f % 5 === 0) {
     const ms = Math.min(15 * 60000, 30000 * 2 ** (f / 5 - 1));
-    prefsSet('pin-until', String(Date.now() + ms));
+    pinLockSet(ms);
     return { ok: false, wait: ms };
   }
   return { ok: false, left: 5 - (f % 5) };

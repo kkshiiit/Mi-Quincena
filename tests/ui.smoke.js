@@ -53,6 +53,15 @@ const fail = m => { console.error('✗ ' + m); process.exitCode = 1; };
     await p.evaluate(() => { action('wipe'); }); await p.fill('#askIn', 'borrar'); await p.click('#askOk');
     if (await p.evaluate(() => state.rules.length)) fail('no borró con BORRAR');
     if (await p.evaluate(() => /confirm\(|prompt\(/.test([...document.scripts].map(s => s.text).join('')))) fail('quedan diálogos nativos');
+    // Espera del PIN: cambiar la hora no la acorta; reiniciar el teléfono la reinicia completa.
+    const clk = await p.evaluate(() => {
+      let E = 1e6, B = 3; const real = Date.now, keep = window.Android;
+      window.Android = { clock: () => JSON.stringify({ e: E, boot: B }), preference: k => localStorage.getItem('mq-' + k) || '', preferenceSave: (k, v) => localStorage.setItem('mq-' + k, v) };
+      pinLockSet(30000); Date.now = () => real() + 3600e3; const a = pinWait(); Date.now = real;
+      E += 10000; const b = pinWait(); B = 4; E = 10; const c = pinWait(); pinLockSet(0); window.Android = keep;
+      return [a, b, c];
+    });
+    if (clk.join() !== '30000,20000,30000') fail('espera del PIN con reloj: ' + clk);
     if (errs.length) fail(width + 'px errores: ' + errs.join(' | '));
     await p.close();
   }

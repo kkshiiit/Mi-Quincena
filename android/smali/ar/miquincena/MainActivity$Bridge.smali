@@ -1709,3 +1709,36 @@
     return-void
 .end method
 
+# Reloj que no se puede adelantar: {"e": ms desde el encendido, "boot": número de encendido}.
+.method public clock()Ljava/lang/String;
+    .locals 5
+    .annotation runtime Landroid/webkit/JavascriptInterface;
+    .end annotation
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    move-result-wide v0
+    const/4 v2, 0x0
+    :try_start_0
+    iget-object v3, p0, Lar/miquincena/MainActivity$Bridge;->this$0:Lar/miquincena/MainActivity;
+    invoke-virtual {v3}, Lar/miquincena/MainActivity;->getContentResolver()Landroid/content/ContentResolver;
+    move-result-object v3
+    const-string v4, "boot_count"
+    invoke-static {v3, v4}, Landroid/provider/Settings$Global;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;)I
+    move-result v2
+    :try_end_0
+    .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_0
+    :catch_0
+    new-instance v3, Ljava/lang/StringBuilder;
+    const-string v4, "{\"e\":"
+    invoke-direct {v3, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    invoke-virtual {v3, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    const-string v4, ",\"boot\":"
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    const-string v4, "}"
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v3
+    return-object v3
+.end method
+
