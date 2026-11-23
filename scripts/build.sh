@@ -7,7 +7,8 @@
 #   SIGNER_JAR       path to uber-apk-signer.jar    (e.g. ~/tools/uber-apk-signer.jar)
 #   MQ_KEYSTORE      path to your .jks keystore     (optional: without it, a debug key is used)
 #   MQ_KEY_ALIAS     key alias inside the keystore
-#   MQ_KEY_PASS      keystore and key password
+#   MQ_KEY_PASS      key password
+#   MQ_STORE_PASS    keystore password (optional; defaults to MQ_KEY_PASS)
 #
 # Usage: scripts/build.sh   → dist/Mi-Quincena.apk
 set -euo pipefail
@@ -33,7 +34,7 @@ java -jar "$APKTOOL_JAR" b "$WORK/project" -o "$WORK/unsigned.apk"
 if [[ -n "${MQ_KEYSTORE:-}" ]]; then
   java -jar "$SIGNER_JAR" -a "$WORK/unsigned.apk" -o "$WORK/signed" \
     --ks "$MQ_KEYSTORE" --ksAlias "${MQ_KEY_ALIAS:?}" \
-    --ksPass "${MQ_KEY_PASS:?}" --ksKeyPass "$MQ_KEY_PASS" --allowResign
+    --ksPass "${MQ_STORE_PASS:-${MQ_KEY_PASS:?}}" --ksKeyPass "$MQ_KEY_PASS" --allowResign
 else
   echo "MQ_KEYSTORE not set: signing with a debug key (cannot update installs signed with your release key)." >&2
   java -jar "$SIGNER_JAR" -a "$WORK/unsigned.apk" -o "$WORK/signed" --allowResign

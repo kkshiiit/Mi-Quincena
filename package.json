@@ -8,6 +8,6 @@
     "serve": "python3 -m http.server 8765 --directory app",
     "build": "bash scripts/build.sh",
     "test:ui": "node tests/ui.smoke.js",
-    "format": "npx prettier@3.3.3 --write \"app/js/*.js\""
+    "format": "npx prettier@3.10.1 --write \"app/js/*.js\""
   }
 }
