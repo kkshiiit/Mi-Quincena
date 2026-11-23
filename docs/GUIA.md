@@ -138,3 +138,39 @@ Revisá que el cobro esté imputado a una fecha de esa quincena.
 
 **¿Por qué aparece “Sin tarifa”?**
 No hay una tarifa vigente para esa fecha. Creá una con una fecha de inicio anterior.
+
+
+## Novedades 3.3
+
+- **Pago del día** (Normal, ×1,5, Doble ×2, Triple ×3 u Otro): al registrar un día elegí cuánto te lo pagan. Multiplica base y extras solo de ese día.
+- **Lugares frecuentes**: tocá un lugar sugerido para no escribirlo.
+- **Pagos** rediseñada: saldo, acciones rápidas (cobrar saldo completo), liquidación y movimientos con colores.
+- **Ajustes** reorganizado: perfil (nombre, puesto, empleador), apariencia con colores de acento, datos y ayuda.
+- Menos animaciones y desenfoque para que la app sea más liviana.
+
+## Novedades 3.4
+
+- **Tarifas por vigencia**: tarjeta de la tarifa vigente (valor hora, hora extra, jornada), historial en línea de tiempo con rango de fechas, % de aumento y días que usa cada tarifa.
+- **Registrar aumento**: por % o nuevo importe, desde una fecha; opcionalmente aumenta también la hora extra.
+- **Hora extra con recargo %** sobre el valor hora (50 % = 1,5 horas).
+- **Cálculos revisados**: redondeo al centavo simétrico (también en descuentos), valor hora mensual = sueldo ÷ (25 × jornada), día ×2 con sueldo mensual suma un día más.
+- **Recordatorios**: horas sugeridas, días como botones, atajos (Lun a vie, Todos…) y “Próximo aviso”.
+- **Tus datos**: resumen (días, cobros, tarifas, tamaño), aviso si hace más de 14 días que no exportás una copia, versiones con fecha relativa, borrar todo con confirmación.
+- **Guía**: buscador, índice y la sección “Cómo se calcula todo” con las fórmulas.
+
+## Novedades 3.5 — Exportación
+
+- Todos los formatos usan los mismos datos: nombre, puesto y empleador, pago especial (×2), ajustes y cobros.
+- **PDF**: tarjetas de resumen, liquidación, tablas con totales, ajustes, cobros, líneas de firma y número de página.
+- **Excel**: horas en formato h:mm, importes en $, columna “Pago del día”, fila de totales con fórmulas, hojas Tarifas/Cobros/Ajustes en español. Se puede volver a importar (incluye el ×2).
+- **Word**: mismo diseño que el PDF, columnas fijas y firmas.
+- **Imagen**: muestra todas las jornadas que entran (se agranda hasta formato historia), con lugar, horario, extras y ×2.
+- **WhatsApp**: puesto, ajustes, cobros y días especiales.
+- Archivos con nombre claro: `Mi-Quincena_2026-11_2a-quincena_tu-nombre.pdf`.
+
+## Novedades 3.6 — Restaurar copias
+
+- Restaurar ya no cambia tu tema, color, perfil ni recordatorios, salvo que lo elijas.
+- Modo **Combinar** (por defecto): agrega días, tarifas, cobros y ajustes que faltan sin tocar lo cargado.
+- Modo **Reemplazar**: deja exactamente lo de la copia en las partes elegidas.
+- Vista previa de lo que va a cambiar y fecha de la copia.

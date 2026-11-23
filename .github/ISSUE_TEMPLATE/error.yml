@@ -1,0 +1,18 @@
+name: Reportar un error
+description: Algo no funciona o calcula mal
+labels: [error]
+body:
+  - type: textarea
+    attributes:
+      label: ¿Qué pasó?
+      description: Contá qué hiciste y qué esperabas. No pegues datos personales.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Versión de la app
+      placeholder: "Ajustes → Ayuda → Acerca de (ej.: 3.8.0)"
+  - type: input
+    attributes:
+      label: Teléfono y versión de Android
+      placeholder: "Ej.: Samsung A54, Android 14"

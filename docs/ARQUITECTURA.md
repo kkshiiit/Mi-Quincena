@@ -46,6 +46,8 @@ La parte nativa expone el objeto `window.Android` (`MainActivity$Bridge`):
 | `cloudConnect` / `cloudSync` / `cloudRead` / … | Archivo de respaldo vinculado mediante el selector de documentos de Android. |
 | `configureReminder(json)` | Recordatorio programado con `JobScheduler`. |
 | `setTheme(oscuro)` / `setDarkColor(color)` | Colores de las barras del sistema (negro puro en AMOLED). |
+| `setPayday(json)` | Fechas de cobro (sin importes) para la notificación del día de cobro; pide permiso de notificaciones. |
+| `setSecure(on)` | Activa o quita `FLAG_SECURE` (oculta en recientes, bloquea capturas). |
 | `preference(k)` / `preferenceSave(k, v)` | Preferencias pequeñas, como borradores u opciones de compartir. |
 
 Cuando la app corre en un navegador común, `window.Android` no existe y se usan `localStorage` y descargas del navegador.
@@ -55,10 +57,13 @@ Cuando la app corre en un navegador común, `window.Android` no existe y se usan
 Es un proyecto de [apktool](https://apktool.org): manifiesto, recursos y código `smali`. Los cambios hechos sobre el original fueron:
 
 - **`res/values-v35/styles.xml`:** `windowOptOutEdgeToEdgeEnforcement`, para que el contenido no quede debajo de la barra de estado en Android 15.
-- **`res/drawable/icon.xml`:** ícono vectorial (medio círculo = las dos quincenas).
+- **`res/drawable-anydpi-v26/icon.xml` + `drawable-nodpi/`:** ícono adaptable (moneda surfeando una ola de billetes), ícono clásico y el de la pantalla de arranque.
+- **`res/drawable/launch.xml`:** pantalla de arranque para Android 8 a 11.
 - **`res/values-v31/styles.xml`:** pantalla de inicio.
 - **`ExportProvider.smali` → `getType`:** devuelve el tipo correcto para `.pdf`, `.png`, `.docx`, `.xlsx` y `.txt`, para que las otras apps reconozcan los archivos compartidos.
 - **`MainActivity$Bridge.smali`:** campo `darkColor` y método `setDarkColor`.
+- **`ReminderService.smali`:** `checkPayday` (notificación del día de cobro, una vez por día) y `paydayOn` (programa el trabajo periódico aunque el recordatorio diario esté apagado).
+- **`MainActivity$Secure.smali` / `MainActivity$AskNotify.smali`:** ejecutan en el hilo de la interfaz `FLAG_SECURE` y el pedido de permiso de notificaciones.
 - **`MainActivity.smali` → `onBackPressed`:** el botón Atrás cierra la búsqueda o el diálogo abierto, o vuelve a Quincena.
 
 La compilación copia `app/` a `assets/` y firma el APK (ver `scripts/build.sh`).

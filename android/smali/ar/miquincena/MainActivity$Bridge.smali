@@ -1623,3 +1623,49 @@
 
     return-void
 .end method
+
+.method public setSecure(Z)V
+    .locals 2
+    .annotation runtime Landroid/webkit/JavascriptInterface;
+    .end annotation
+
+    iget-object v0, p0, Lar/miquincena/MainActivity$Bridge;->this$0:Lar/miquincena/MainActivity;
+    new-instance v1, Lar/miquincena/MainActivity$Secure;
+    invoke-direct {v1, v0, p1}, Lar/miquincena/MainActivity$Secure;-><init>(Landroid/app/Activity;Z)V
+    invoke-virtual {v0, v1}, Lar/miquincena/MainActivity;->runOnUiThread(Ljava/lang/Runnable;)V
+    return-void
+.end method
+
+.method public setPayday(Ljava/lang/String;)V
+    .locals 4
+    .annotation runtime Landroid/webkit/JavascriptInterface;
+    .end annotation
+
+    :try_start_0
+    iget-object v0, p0, Lar/miquincena/MainActivity$Bridge;->this$0:Lar/miquincena/MainActivity;
+    invoke-virtual {v0}, Lar/miquincena/MainActivity;->prefs()Landroid/content/SharedPreferences;
+    move-result-object v1
+    invoke-interface {v1}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v1
+    const-string v2, "payday-config"
+    invoke-interface {v1, v2, p1}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    move-result-object v1
+    invoke-interface {v1}, Landroid/content/SharedPreferences$Editor;->commit()Z
+    invoke-static {v0}, Lar/miquincena/ReminderService;->schedule(Landroid/content/Context;)V
+    new-instance v1, Lorg/json/JSONObject;
+    invoke-direct {v1, p1}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    const-string v2, "enabled"
+    const/4 v3, 0x0
+    invoke-virtual {v1, v2, v3}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+    move-result v1
+    if-eqz v1, :done
+    new-instance v1, Lar/miquincena/MainActivity$AskNotify;
+    invoke-direct {v1, v0}, Lar/miquincena/MainActivity$AskNotify;-><init>(Landroid/app/Activity;)V
+    invoke-virtual {v0, v1}, Lar/miquincena/MainActivity;->runOnUiThread(Ljava/lang/Runnable;)V
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+    :done
+    :catch_0
+    return-void
+.end method
+

@@ -19,6 +19,7 @@ DIST="$ROOT/dist"
 : "${SIGNER_JAR:?Set SIGNER_JAR to the path of uber-apk-signer.jar}"
 
 node "$ROOT/tests/core.test.js"
+node "$ROOT/tests/fuzz.test.js"
 
 rm -rf "$WORK" && mkdir -p "$WORK" "$DIST"
 cp -r "$ROOT/android" "$WORK/project"

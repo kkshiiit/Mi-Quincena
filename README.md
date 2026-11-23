@@ -1,99 +1,97 @@
+<div align="center">
+
+<img src="docs/img/icono.png" width="128" alt="Ícono de Mi Quincena">
+
 # Mi Quincena
 
-App de Android para llevar **tus horarios de trabajo y lo que te pagan, quincena por quincena**.
+**Tus horarios y lo que te pagan, quincena por quincena.**
+Registrás cada día que trabajás y la app calcula sola cuánto generaste, cuánto cobraste y cuánto te deben.
 
-Registrás cada día que trabajás y la app calcula sola:
-- cuánto generaste;
-- cuánto ya cobraste;
-- cuánto te deben.
+[![Descargar APK](https://img.shields.io/badge/Descargar-APK%20para%20Android-0a6f66?style=for-the-badge&logo=android&logoColor=white)](https://github.com/kkshiiit/Mi-Quincena/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/kkshiiit/Mi-Quincena/ci.yml?branch=main&style=for-the-badge&label=tests)](https://github.com/kkshiiit/Mi-Quincena/actions)
+![Versión](https://img.shields.io/badge/versión-3.8.0-152e4d?style=for-the-badge)
+![Sin internet](https://img.shields.io/badge/sin%20internet-sin%20cuenta-ffc93c?style=for-the-badge)
 
-Funciona sin internet, sin publicidad y sin crear una cuenta. Tus datos quedan guardados solo en tu teléfono.
+<img src="docs/img/quincena.png" width="200" alt="Pantalla Quincena">
+<img src="docs/img/registrar.png" width="200" alt="Registrar un día">
+<img src="docs/img/pagos.png" width="200" alt="Pagos">
+<img src="docs/img/obras.png" width="200" alt="Resumen por obra">
 
-## ¿Para quién es?
+</div>
 
-Para quien cobra por día, por hora o con sueldo mensual y quiere saber exactamente cuánto le corresponde cada quincena. Por ejemplo: trabajo por jornada, changas, turnos rotativos o empleo informal. Sirve también para tener un registro claro y mostrarlo cuando te pagan.
+---
 
-## Qué hace
+## ✨ Qué hace
 
-| Pantalla | Para qué sirve |
+| | |
 |---|---|
-| **Quincena** | Muestra el saldo pendiente de cobro, lo generado y lo cobrado (con %), tus jornadas, horas y horas extra. Incluye un gráfico de las últimas 6 quincenas y un aviso si quedó plata sin cobrar de quincenas anteriores. |
-| **Horarios** | La planilla de cada día del período: asistencia, entrada, salida y descanso. Se puede filtrar por estado y cargar varios días iguales de una vez. |
-| **Pagos** | La liquidación (base, extras, ajustes, generado, cobrado y pendiente), los cobros, los ajustes (viáticos, descuentos) y el botón para cerrar o reabrir una quincena. |
-| **Ajustes** | Tarifas por vigencia, recordatorios, copias de seguridad, Google Drive, importar Excel, apariencia (claro, oscuro, AMOLED) y la guía de uso. |
+| 🗓️ **Registrar el día en pasos** | Hoy/Ayer, ¿trabajaste?, obra (con sugerencias), entrada y salida, descanso en un toque. El turno noche se detecta solo. |
+| 💰 **Pago del día** | Normal, ×1,5, doble, triple u otro. Opcional: en domingos y feriados te **pregunta** si te lo pagan distinto (nunca lo aplica solo). |
+| 📊 **Quincena** | Pendiente de cobro, generado, cobrado con %, horas y extras. Avisos de día de cobro y de días sin registrar. |
+| 🧾 **Pagos** | Registrás cada cobro eligiendo la quincena (ves cuánto te deben de cada una), ajustes (viáticos, adelantos) y cierre de quincena. |
+| 🏗️ **Por obra** | Misma empresa, distintas obras: días, horas y extras en cada una; dónde más fuiste y dónde más extras hiciste. |
+| 📈 **Tarifas por vigencia** | Por día, hora o mes. Aumentos por % o importe desde una fecha; los días anteriores conservan su valor. Hora extra fija o con recargo %. |
+| 📤 **Compartir** | WhatsApp, imagen, PDF con firmas, Excel con fórmulas y Word. |
+| 🔒 **Privacidad** | Sin permiso de internet, sin cuenta ni publicidad. Bloqueo con PIN y ocultar en apps recientes. |
+| 💾 **Tus datos** | Copias completas, versiones automáticas, Google Drive, importar Excel. Restaurar combinando o reemplazando, sin pisar tu tema. |
+| 🎨 **A tu gusto** | Claro, oscuro, AMOLED, 8 colores de acento, sin animaciones. |
 
-Además:
-- **Compartir quincena** en 5 formatos: texto para WhatsApp, imagen, PDF, Excel y Word. Antes de compartir elegís si incluir el pendiente, el generado, el cobrado con porcentaje y el detalle por día.
-- **Buscador**: encuentra cualquier día, fecha, lugar, cobro o importe en todos los períodos.
-- **Tarifas con vigencia**: si te aumentan, los días anteriores conservan su valor.
-- **Deshacer** después de cada cambio, y una copia local automática antes de guardar.
+Cada función opcional se prende y se apaga desde **Ajustes → Funciones**.
 
-La guía completa, con ejemplos, está en [docs/GUIA.md](docs/GUIA.md).
+<div align="center">
+<img src="docs/img/quincena-amoled.png" width="220" alt="Modo AMOLED">
+<img src="docs/img/funciones.png" width="220" alt="Funciones opcionales">
+</div>
 
-## Instalar
+## 📲 Instalar
 
-1. Descargá el APK más reciente desde la sección **Releases** de este repositorio.
-2. Abrilo en tu teléfono Android (8.0 o más nuevo) y aceptá instalar desde esa fuente.
+1. Entrá a **[Releases](https://github.com/kkshiiit/Mi-Quincena/releases/latest)** y descargá `Mi-Quincena.apk`.
+2. Abrilo en tu Android (8.0 o más nuevo) y aceptá instalar desde esa fuente.
 
-> **Si ya tenés la app instalada:** una versión firmada con la misma clave se instala encima y conserva tus datos. Si Android te pide desinstalar primero, **antes exportá una copia** desde Ajustes → Copias de seguridad, porque desinstalar borra los datos del teléfono.
+> [!IMPORTANT]
+> **¿Ya tenés la app?** Antes de actualizar, exportá una copia: *Ajustes → Tus datos → Copias de seguridad → Exportar*. Si Android pide desinstalar (pasa cuando el APK está firmado con otra clave), desinstalá, instalá y restaurá la copia.
 
-## Cómo está hecha
+📖 Guía completa con ejemplos: **[docs/GUIA.md](docs/GUIA.md)** (también está dentro de la app).
 
-Es una app web dentro de una ventana nativa de Android (WebView):
+## 🧮 Cómo calcula
+
+```
+Horas      = salida − entrada − descanso   (+24 h si sale al día siguiente)
+Extras     = horas − jornada normal        (o fuera de un horario fijo)
+Valor hora = día ÷ jornada  ·  hora  ·  mes ÷ (25 × jornada)
+Día        = (base + extras × valor extra) × pago del día
+Pendiente  = Σ días + sueldo mensual + ajustes − cobrado
+```
+
+Todo al centavo, con la tarifa vigente en cada fecha. Verificado con tests y una prueba de 3000 escenarios al azar.
+
+## 🛠️ Para desarrollar
 
 ```
 app/        Interfaz y lógica (HTML, CSS y JavaScript puro, sin frameworks)
-  index.html     Estructura de la pantalla
-  app.js         Pantallas, formularios, compartir, búsqueda
-  core.js        Cálculos puros: horas, extras, tarifas, saldos, búsqueda (con tests)
-  style.css      Diseño (vidrio translúcido, temas claro/oscuro/AMOLED)
-  seed.js        Datos iniciales vacíos para la primera apertura
-  xlsx.full.min.js, jspdf.umd.min.js   Librerías de terceros (Excel/Word y PDF)
-android/    Contenedor nativo (proyecto apktool: manifiesto, recursos, código smali)
-tests/      Tests de los cálculos (node tests/core.test.js)
+  core.js        Cálculos puros y testeados
+  app.js         Pantallas, formularios, exportaciones
+  style.css      Diseño y temas
+  logo.js        Ícono embebido
+android/    Contenedor nativo (proyecto apktool: manifiesto, recursos, smali)
+tests/      Tests de cálculo y prueba de 3000 escenarios
 scripts/    build.sh: arma y firma el APK
-docs/       Guía de uso y notas técnicas
+docs/       Guía, arquitectura, privacidad, capturas
 ```
-
-La parte nativa (`android/`) resuelve lo que una página web no puede hacer sola:
-- guardar los datos en el teléfono;
-- compartir y guardar archivos;
-- respaldar en Drive;
-- mandar recordatorios.
-
-El detalle está en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
-
-## Probar y compilar
-
-**Probar la interfaz en la computadora** (sin Android, guarda en el navegador):
 
 ```bash
-python -m http.server 8765 --directory app
+npm test                 # tests de cálculo + 3000 escenarios
+npm run serve            # probar la interfaz en http://localhost:8765
+APKTOOL_JAR=… SIGNER_JAR=… npm run build   # APK en dist/
 ```
 
-Abrí `http://localhost:8765`. Las funciones nativas (Drive, recordatorios) aparecen como no disponibles.
+Cada push corre los tests y compila un APK de prueba (Actions → artefacto). Al subir una etiqueta `vX.Y.Z` se publica el Release con el APK.
 
-**Correr los tests:**
+**Firma:** sin clave se firma con una clave de prueba. Para que las actualizaciones se instalen encima, cargá en *Settings → Secrets → Actions*: `MQ_KEYSTORE_B64` (tu `.jks` en base64), `MQ_KEY_ALIAS` y `MQ_KEY_PASS`. Nunca subas la clave al repositorio.
 
-```bash
-node tests/core.test.js
-```
+Más detalle: [Arquitectura](docs/ARQUITECTURA.md) · [Privacidad](docs/PRIVACIDAD.md) · [Cambios](CHANGELOG.md)
 
-**Compilar el APK.** Necesitás Java 17 o más nuevo, [apktool](https://apktool.org) y [uber-apk-signer](https://github.com/patrickfav/uber-apk-signer):
+## 🙌 Créditos
 
-```bash
-APKTOOL_JAR=~/tools/apktool.jar SIGNER_JAR=~/tools/uber-apk-signer.jar scripts/build.sh
-```
-
-Sin `MQ_KEYSTORE` se firma con una clave de prueba. Para publicar actualizaciones, definí `MQ_KEYSTORE`, `MQ_KEY_ALIAS` y `MQ_KEY_PASS` con tu propia clave. **Nunca subas la clave ni su contraseña al repositorio**: el `.gitignore` ya excluye `*.jks` y `*.pass`.
-
-## Privacidad
-
-- No hay servidores, cuentas, analíticas ni publicidad.
-- La app no pide permiso de internet para la interfaz: todo se carga desde el propio APK.
-- Los datos viven en el almacenamiento privado de la app. Solo salen del teléfono si vos exportás, compartís o vinculás un archivo de Drive.
-
-## Créditos
-
-- [SheetJS](https://sheetjs.com) (`xlsx.full.min.js`), licencia Apache 2.0: Excel e importación, y el empaquetado de los archivos Word.
-- [jsPDF](https://github.com/parallax/jsPDF) (`jspdf.umd.min.js`), licencia MIT: recibos en PDF.
+- [SheetJS](https://sheetjs.com) 0.20.3 (Apache 2.0): Excel, importación y empaquetado de Word.
+- [jsPDF](https://github.com/parallax/jsPDF) 4.2.1 (MIT): PDF.
