@@ -1,5 +1,8 @@
 # Cambios
 
+## 3.7.1
+- Ícono nuevo: nivel de obra cuya burbuja es una moneda (quincena "nivelada" = cobrada justo).
+
 ## 3.7.0
 - Formulario de día por pasos (Hoy/Ayer, ¿trabajaste?, obra con sugerencias que no tapan, horario con turno noche automático, descanso en un toque, pago del día).
 - Registrar cobro por pasos: elegís la quincena con lo que te deben, “todo lo que te deben”, Hoy/Ayer, medio de pago.
