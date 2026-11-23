@@ -1,5 +1,11 @@
 # Cambios
 
+## 3.9.4
+- Las 15 confirmaciones y el pedido de texto nativos de Android se reemplazaron por un diálogo propio (`ask()`): sigue el tema y el color de acento, se abre encima del formulario sin cerrarlo, tiene título y botones claros (“Eliminar”, “Guardar igual”, “Activar”…) y marca en rojo lo que borra.
+- “Borrar todos los datos” se confirma escribiendo BORRAR en el mismo diálogo.
+- “Atrás” o Escape cancelan.
+- La prueba de interfaz falla si vuelve a aparecer un diálogo nativo.
+
 ## 3.9.3
 - `app.js` (140 KB en pocas líneas) dividido en 10 archivos legibles en `app/js/`: utilidades, estado, pantallas, formularios, datos, exportar, seguridad, búsqueda, guía y arranque.
 - Código formateado con Prettier (`npm run format`) y `.prettierrc`.

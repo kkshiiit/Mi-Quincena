@@ -1,7 +1,7 @@
 // Utilidades: formato, íconos, fechas, colores de acento, carga diferida de librerías y descargas.
 'use strict';
 
-const APP_VERSION = '3.9.3';
+const APP_VERSION = '3.9.4';
 
 const $ = id => document.getElementById(id),
   esc = s =>
@@ -159,4 +159,55 @@ function download(name, mime, data) {
   } catch (e) {
     toast('No se pudo exportar: ' + e.message);
   }
+}
+
+// Diálogo de confirmación propio (reemplaza confirm/prompt nativos): sigue el tema y se abre
+// encima de otro formulario sin cerrarlo. Devuelve true/false, o el texto escrito si se pide `input`.
+function ask(msg, { ok = 'Aceptar', cancel = 'Cancelar', danger = false, input = null, title = '' } = {}) {
+  return new Promise(resolve => {
+    let d = $('ask');
+    if (!d) {
+      d = document.createElement('dialog');
+      d.id = 'ask';
+      d.setAttribute('aria-labelledby', 'askMsg');
+      document.body.appendChild(d);
+    }
+    d.innerHTML =
+      (title ? '<h2>' + esc(title) + '</h2>' : '') +
+      '<p id="askMsg" class="ask-msg">' +
+      esc(msg) +
+      '</p>' +
+      (input
+        ? '<input id="askIn" type="text" autocomplete="off" placeholder="' +
+          esc(input) +
+          '" aria-label="' +
+          esc(input) +
+          '">'
+        : '') +
+      '<div class="actions"><button type="button" id="askNo">' +
+      esc(cancel) +
+      '</button>' +
+      '<button type="button" id="askOk" class="' +
+      (danger ? 'primary danger-fill' : 'primary') +
+      '">' +
+      esc(ok) +
+      '</button></div>';
+    let done = false;
+    const finish = v => {
+      if (done) return;
+      done = true;
+      if (d.open) d.close();
+      resolve(v);
+    };
+    const inp = $('askIn');
+    $('askOk').onclick = () => finish(input ? inp.value : true);
+    $('askNo').onclick = () => finish(input ? null : false);
+    d.oncancel = e => {
+      e.preventDefault();
+      finish(input ? null : false);
+    };
+    if (inp) inp.onkeydown = e => e.key === 'Enter' && finish(inp.value);
+    d.showModal();
+    setTimeout(() => (inp || (danger ? $('askNo') : $('askOk'))).focus(), 30);
+  });
 }

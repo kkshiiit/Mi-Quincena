@@ -124,14 +124,22 @@ function dayTitle(d) {
   return w[0].toUpperCase() + w.slice(1) + (h ? ' · Feriado: ' + h.name : '');
 }
 
-function editRow(date) {
+async function editRow(date) {
   let existing = state.rows.find(x => x.date === date),
     r = clone(existing || blank(date));
   let draft;
   try {
     draft = JSON.parse(prefsGet('draft-row') || 'null');
   } catch (e) {}
-  if (draft && draft.original === date && confirm('Hay cambios sin guardar de este día. ¿Retomarlos?')) r = draft.row;
+  if (
+    draft &&
+    draft.original === date &&
+    (await ask('Hay cambios sin guardar de este día. ¿Querés retomarlos?', {
+      ok: 'Retomar',
+      cancel: 'Empezar de nuevo',
+    }))
+  )
+    r = draft.row;
   if (!r.status) r.status = 'Presente';
   const m = r.multiplier || 1,
     isCustom = ![1, 1.5, 2, 3].includes(m),
@@ -373,7 +381,7 @@ function editRow(date) {
   form.onchange = onEdit;
   preview();
   const initial = JSON.stringify(rowFrom(new FormData(form)));
-  form.onsubmit = e => {
+  form.onsubmit = async e => {
     e.preventDefault();
     try {
       const v = rowFrom(new FormData(form));
@@ -383,7 +391,15 @@ function editRow(date) {
       if (v.date !== date && state.rows.some(x => x.date === v.date && (x.status || x.place || x.note)))
         throw Error('Ese día ya tiene datos. Abrilo desde Horarios para editarlo.');
       const ws = state.settings.checks ? Core.rowWarnings(v, today()) : [];
-      if (ws.length && !confirm('Revisá antes de guardar:\n• ' + ws.join('\n• ') + '\n\n¿Guardar igual?')) return;
+      if (
+        ws.length &&
+        !(await ask('• ' + ws.join('\n• '), {
+          title: 'Revisá antes de guardar',
+          ok: 'Guardar igual',
+          cancel: 'Corregir',
+        }))
+      )
+        return;
       if (
         mutate(
           () => {
@@ -420,10 +436,16 @@ function editRow(date) {
     saveDraft();
   };
   if ($('deleteRow'))
-    $('deleteRow').onclick = () => {
+    $('deleteRow').onclick = async () => {
       try {
         guardDates([date]);
-        if (confirm('¿Eliminar este día? Se recalculan horas y pagos. Podés deshacerlo.'))
+        if (
+          await ask('Se recalculan horas y pagos. Podés deshacerlo.', {
+            title: '¿Eliminar este día?',
+            ok: 'Eliminar',
+            danger: true,
+          })
+        )
           if (mutate(() => (state.rows = state.rows.filter(x => x.date !== date)), 'Día eliminado.')) {
             clearTimeout(draftTimer);
             prefsSet('draft-row', '');
@@ -872,7 +894,7 @@ function ruleForm(from) {
   f.oninput = preview;
   f.onchange = preview;
   preview();
-  f.onsubmit = e => {
+  f.onsubmit = async e => {
     e.preventDefault();
     try {
       const v = value();
@@ -882,11 +904,12 @@ function ruleForm(from) {
       guardRules([from, v.from].filter(Boolean).sort()[0]);
       if (
         from &&
-        !confirm(
+        !(await ask(
           'Editar una tarifa recalcula todos los días desde ' +
             dateLabel([from, v.from].sort()[0]) +
             '. Si es un aumento, mejor usá “Registrar aumento”. ¿Guardar igual?',
-        )
+          { title: '¿Editar esta tarifa?', ok: 'Guardar igual', cancel: 'Volver' },
+        ))
       )
         return;
       if (mutate(() => (state.rules = state.rules.filter(x => x.from !== from).concat(v)), 'Tarifa guardada.'))
@@ -896,10 +919,16 @@ function ruleForm(from) {
     }
   };
   if ($('deleteRule'))
-    $('deleteRule').onclick = () => {
+    $('deleteRule').onclick = async () => {
       try {
         guardRules(from);
-        if (confirm('¿Eliminar esta tarifa? Los días que la usaban pasan a la tarifa anterior.'))
+        if (
+          await ask('Los días que la usaban pasan a la tarifa anterior.', {
+            title: '¿Eliminar esta tarifa?',
+            ok: 'Eliminar',
+            danger: true,
+          })
+        )
           if (mutate(() => (state.rules = state.rules.filter(x => x.from !== from)), 'Tarifa eliminada.')) ratesView();
       } catch (e) {
         formError(e);
@@ -1068,8 +1097,14 @@ function paymentForm(id, amount, key) {
     }
   };
   if ($('deletePayment'))
-    $('deletePayment').onclick = () => {
-      if (confirm('¿Eliminar el cobro? Ese importe vuelve a quedar pendiente.'))
+    $('deletePayment').onclick = async () => {
+      if (
+        await ask('Ese importe vuelve a quedar pendiente.', {
+          title: '¿Eliminar el cobro?',
+          ok: 'Eliminar',
+          danger: true,
+        })
+      )
         if (mutate(() => (state.payments = state.payments.filter(x => x.id !== id)), 'Cobro eliminado.')) closeModal();
     };
 }
@@ -1107,10 +1142,16 @@ function adjustmentForm(id) {
     }
   };
   if ($('deleteAdjustment'))
-    $('deleteAdjustment').onclick = () => {
+    $('deleteAdjustment').onclick = async () => {
       try {
         guardDates([a.date]);
-        if (confirm('¿Eliminar este ajuste?'))
+        if (
+          await ask('Se recalcula lo generado de la quincena.', {
+            title: '¿Eliminar este ajuste?',
+            ok: 'Eliminar',
+            danger: true,
+          })
+        )
           if (mutate(() => (state.adjustments = state.adjustments.filter(x => x.id !== id)))) closeModal();
       } catch (e) {
         formError(e);
@@ -1186,7 +1227,7 @@ function batchForm() {
       $('batchPreview').textContent = e.message;
     }
   };
-  form.onsubmit = e => {
+  form.onsubmit = async e => {
     e.preventDefault();
     try {
       const rs = rows();
@@ -1194,12 +1235,13 @@ function batchForm() {
       rs.forEach(Core.validateRow);
       guardDates(rs.map(r => r.date));
       if (
-        !confirm(
+        !(await ask(
           '¿Cargar ' +
             rs.length +
             ' jornadas?\n' +
             rs.map(r => dateLabel(r.date) + ' ' + r.start + '–' + r.end).join('\n'),
-        )
+          { ok: 'Cargar días' },
+        ))
       )
         return;
       if (
@@ -1333,7 +1375,7 @@ function remindersForm() {
   };
 }
 
-function featureToggle(b) {
+async function featureToggle(b) {
   const k = b.dataset.feature,
     on = b.checked;
   if (k === 'checks' || k === 'placeStats')
@@ -1341,9 +1383,10 @@ function featureToggle(b) {
   if (k === 'specialPay') {
     if (
       on &&
-      !confirm(
+      !(await ask(
         'Cuando cargues un domingo, sábado o feriado, la app te va a PREGUNTAR si lo pagan distinto. Nunca lo aplica sola. ¿Activar?',
-      )
+        { title: 'Pago especial', ok: 'Activar' },
+      ))
     ) {
       b.checked = false;
       return;
@@ -1356,11 +1399,12 @@ function featureToggle(b) {
   if (k === 'payday') {
     if (
       on &&
-      !confirm(
+      !(await ask(
         'Vas a ver un aviso en Quincena cuando llegue el día de cobro' +
           (window.Android ? ' y una notificación del teléfono' : '') +
           '. ¿Activar?',
-      )
+        { title: 'Aviso de día de cobro', ok: 'Activar' },
+      ))
     ) {
       b.checked = false;
       return;

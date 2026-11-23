@@ -1,6 +1,6 @@
 {
   "name": "mi-quincena",
-  "version": "3.9.3",
+  "version": "3.9.4",
   "private": true,
   "description": "App Android para registrar horarios y cobros por quincena",
   "scripts": {

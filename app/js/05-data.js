@@ -171,13 +171,17 @@ function restorePreview(candidate, meta) {
   }
   f.onchange = pv;
   pv();
-  f.onsubmit = e => {
+  f.onsubmit = async e => {
     e.preventDefault();
     const o = read();
     if (
       o.mode === 'replace' &&
       (o.parts.rows || o.parts.money) &&
-      !confirm('Reemplazar borra de este teléfono lo que no esté en la copia. ¿Seguir?')
+      !(await ask('Se borra de este teléfono lo que no esté en la copia. Podés deshacerlo.', {
+        title: '¿Reemplazar?',
+        ok: 'Reemplazar',
+        danger: true,
+      }))
     )
       return;
     const was = loadError;
@@ -269,8 +273,14 @@ window.onCloudConflict = () => {
   );
   $('inspectCloud').onclick = () => Android.cloudRead();
   $('exportLocal').onclick = () => action('backup');
-  $('replaceCloud').onclick = () => {
-    if (confirm('¿Reemplazar el archivo vinculado por los datos de este teléfono?')) {
+  $('replaceCloud').onclick = async () => {
+    if (
+      await ask('El archivo vinculado se pisa con los datos de este teléfono.', {
+        title: '¿Reemplazar el respaldo?',
+        ok: 'Reemplazar',
+        danger: true,
+      })
+    ) {
       Android.cloudReplace();
       closeModal();
     }
@@ -460,14 +470,20 @@ function importPreview(b64, mapping) {
   document.querySelector('[name=duplicatePolicy]').onchange = e =>
     ($('duplicateChoices').hidden = e.target.value !== 'replace');
   $('mapColumns').onclick = () => mappingForm(b64);
-  $('importConfirm').onclick = () => {
+  $('importConfirm').onclick = async () => {
     try {
       const replacements = new Set([...document.querySelectorAll('[name=replaceDate]:checked')].map(x => x.value)),
         replace = document.querySelector('[name=duplicatePolicy]').value === 'replace',
         add = parsed.rows.filter(r => !dupSet.has(r.date) || (replace && replacements.has(r.date)));
       guardDates(add.map(r => r.date));
       if (!add.length) throw Error('No hay filas nuevas ni reemplazos seleccionados.');
-      if (!confirm('¿Importar ' + add.length + ' fechas? Se conservará una copia local anterior.')) return;
+      if (
+        !(await ask('Se guarda antes una versión de lo que tenés ahora.', {
+          title: '¿Importar ' + add.length + ' fechas?',
+          ok: 'Importar',
+        }))
+      )
+        return;
       if (
         mutate(() => {
           const ds = new Set(add.map(r => r.date));

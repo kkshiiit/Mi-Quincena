@@ -28,7 +28,7 @@ Revisión completa de `app/`, `android/`, `tests/`, `scripts/` y CI.
 1. ~~**`style.css` en capas**~~ **Resuelto en 3.9.2:** reescrito por componentes; temas y transparencia solo cambian variables. Verificado con 120 capturas comparadas píxel a píxel (`tests/visual/`).
 2. ~~**`app.js` de 140 KB**~~ **Resuelto en 3.9.3:** dividido en 10 archivos formateados en `app/js/`.
 3. **HTML armado con cadenas**: funciona y está escapado, pero una función de plantillas o `lit-html` reduciría el riesgo de olvidar un `esc`.
-4. **`confirm()`/`prompt()` nativos** (15 usos): no siguen el diseño ni el modo oscuro. Conviene un diálogo propio.
+4. ~~**`confirm()`/`prompt()` nativos**~~ **Resuelto en 3.9.4:** diálogo propio `ask()` en `01-util.js`.
 5. **El bloqueo depende del reloj del teléfono**: cambiar la hora acorta la espera tras 5 errores. Mitigable guardando también el tiempo de arranque del sistema (`SystemClock.elapsedRealtime`) desde Android.
 6. **Avisos de cobro**: se preparan 8 fechas (unos 4 meses). Si la app no se abre en ese tiempo, dejan de llegar. Android podría calcularlas solo.
 7. **Firma**: los Releases salen con clave de prueba hasta cargar los secretos `MQ_KEYSTORE_B64`, `MQ_KEY_ALIAS` y `MQ_KEY_PASS`.
