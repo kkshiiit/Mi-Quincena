@@ -17,7 +17,8 @@ const fail = m => { console.error('✗ ' + m); process.exitCode = 1; };
     for (const t of ['summary', 'hours', 'pay', 'settings', 'stats', 'guide']) { await p.evaluate(t => go(t), t); await overflow(t); }
     for (const f of ['editRow(today())', 'paymentForm()', 'adjustmentForm()', 'ratesView()', 'ruleForm()', 'remindersForm()', 'backupsForm()', 'profileForm()', 'specialForm()', 'paydayForm()', 'shareSheet()', 'aboutForm()']) {
       await p.evaluate(f => { if ($('dialog').open) $('dialog').close(); eval(f); }, f);
-      if (await p.evaluate(() => $('dialog').scrollWidth > $('dialog').clientWidth + 1)) fail(width + 'px desborde en ' + f);
+      const ov = await p.evaluate(() => { const d = $('dialog'); if (d.scrollWidth <= d.clientWidth + 1) return ''; const r = d.getBoundingClientRect().right; const el = [...d.querySelectorAll('*')].find(e => e.getBoundingClientRect().right > r + 1); return el ? el.tagName + '.' + el.className + ' «' + el.textContent.trim().slice(0, 30) + '»' : '?'; });
+      if (ov) fail(width + 'px desborde en ' + f + ': ' + ov);
     }
     await p.evaluate(() => $('dialog').close());
     // Flujo: registrar un día, cobrarlo, exportar y deshacer.

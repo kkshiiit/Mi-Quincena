@@ -437,18 +437,18 @@ dialog::backdrop{background:var(--backdrop);-webkit-backdrop-filter:blur(6px);ba
 /* Tarifas */
 .rate-hero{padding:18px;border-radius:22px;background:linear-gradient(140deg,var(--tint-strong),var(--tint));margin:6px 0 4px}
 .rate-hero>small{font-weight:650}
-.rate-hero>strong{display:block;font-size:30px;letter-spacing:-.03em;margin:2px 0 12px}
+.rate-hero>strong{display:block;font-size:30px;letter-spacing:-.03em;margin:2px 0 12px;overflow-wrap:anywhere}
 .rate-hero>strong span{font-size:15px;color:var(--muted);font-weight:600}
-.rate-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px}
 .rate-facts span{font-size:12px;color:var(--muted)}
-.rate-facts b{display:block;font-size:15px;color:var(--ink)}
+.rate-facts b{display:block;font-size:15px;color:var(--ink);overflow-wrap:anywhere}
 .rates{display:grid;gap:10px;margin:6px 0}
 .rate-card{display:block;width:100%;text-align:left;padding:14px 16px;border:1px solid var(--hair);border-radius:20px;background:var(--glass-strong);box-shadow:none}
 .rate-card.current{border-color:var(--accent);background:var(--tint)}
 .rate-card small{display:block}
-.rate-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
-.rate-top strong{font-size:20px;white-space:nowrap}
-.rate-top small{display:inline;font-size:13px}
+.rate-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 10px;margin-bottom:4px}
+.rate-top strong{font-size:20px;min-width:0;overflow-wrap:anywhere}
+.rate-top small{display:inline;font-size:13px;white-space:nowrap}
 .timeline{list-style:none;margin:0;padding:0 0 0 16px;border-left:2px solid var(--hair);display:grid;gap:10px}
 .timeline li{position:relative}
 .timeline li::before{content:"";position:absolute;left:-23px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--hair);border:2px solid var(--bg)}
