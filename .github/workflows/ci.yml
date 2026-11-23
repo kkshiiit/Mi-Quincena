@@ -21,6 +21,11 @@ jobs:
           java-version: 17
       - name: Tests
         run: npm test
+      - name: Prueba de interfaz
+        run: |
+          npm i --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+          npm run test:ui
       - name: Herramientas de compilación
         run: |
           mkdir -p ~/tools
