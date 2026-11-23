@@ -10,7 +10,7 @@ La parte web se carga desde los `assets` del APK. No usa red ni librerías exter
 |---|---|
 | `app/core.js` | Lógica pura y testeable: validación de datos, cálculo de horas y extras, tarifas con vigencia, resumen por período, historial, saldo arrastrado, búsqueda. Se usa en el navegador (`window.Core`) y en Node (`module.exports`). |
 | `app/app.js` | Pantallas, formularios, compartir (texto, PNG por `canvas`, PDF, Excel, DOCX), búsqueda, guía, temas y comunicación con Android. |
-| `app/style.css` | Diseño con tokens de color en `:root`, temas claro, oscuro y AMOLED (`:root.amoled`), y modos de reducir transparencia y movimiento. |
+| `app/style.css` | Diseño en 11 secciones (tokens, base, estructura, controles, superficies, listas, ventanas, pantallas, bloqueo, adaptable, preferencias). Los temas (`:root[data-theme]`, `:root.amoled`) y “Reducir transparencia” (`body.no-glass`) **solo cambian variables**; los tokens derivados viven en `body`. Para cambios de estilo: `tests/visual/` captura 120 pantallas y compara. |
 
 ## Datos
 

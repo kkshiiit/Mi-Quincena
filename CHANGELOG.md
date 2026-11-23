@@ -1,5 +1,12 @@
 # Cambios
 
+## 3.9.2
+- `style.css` reescrito por componentes (11 secciones), sin capas de versiones viejas: 45 → 41 KB, `!important` de 14 a 4.
+- Temas y “Reducir transparencia” cambian solo variables: ningún componente puede volver a perder su color.
+- Arreglos: en modo oscuro el tono suave ignoraba el color de acento; el “/ día” del historial de tarifas bajaba de renglón; botones de color (aviso de copia, círculos de acento) cambiaban de fondo al pasar el dedo.
+- Se eliminaron 8 clases sin uso.
+- `tests/visual/`: captura 120 pantallas y compara antes/después.
+
 ## 3.9.1
 Auditoría de código ([docs/AUDITORIA.md](docs/AUDITORIA.md)):
 - El PIN se guarda con PBKDF2 (210.000 iteraciones); los PIN anteriores se migran solos.
