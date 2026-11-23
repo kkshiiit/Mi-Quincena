@@ -9,7 +9,7 @@ La parte web se carga desde los `assets` del APK. No usa red ni librerías exter
 | Archivo | Responsabilidad |
 |---|---|
 | `app/core.js` | Lógica pura y testeable: validación de datos, cálculo de horas y extras, tarifas con vigencia, resumen por período, historial, saldo arrastrado, búsqueda. Se usa en el navegador (`window.Core`) y en Node (`module.exports`). |
-| `app/app.js` | Pantallas, formularios, compartir (texto, PNG por `canvas`, PDF, Excel, DOCX), búsqueda, guía, temas y comunicación con Android. |
+| `app/js/01-util.js` … `10-main.js` | Interfaz dividida por responsabilidad: utilidades, estado (carga/guardado/deshacer), pantallas, formularios, datos (copias, Drive, importar), exportar, seguridad (PIN, huella, bloqueo), búsqueda, guía y arranque. Son scripts clásicos (no módulos ES, que el WebView no permite desde `file://`) y comparten el ámbito global: **el orden de `index.html` importa** y solo `10-main.js` ejecuta código al cargar. |
 | `app/style.css` | Diseño en 11 secciones (tokens, base, estructura, controles, superficies, listas, ventanas, pantallas, bloqueo, adaptable, preferencias). Los temas (`:root[data-theme]`, `:root.amoled`) y “Reducir transparencia” (`body.no-glass`) **solo cambian variables**; los tokens derivados viven en `body`. Para cambios de estilo: `tests/visual/` captura 120 pantallas y compara. |
 
 ## Datos
