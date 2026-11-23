@@ -180,8 +180,6 @@ form{display:grid;gap:16px}
 /* Reduce transparency: solid surfaces, same layout */
 .no-glass *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 .no-glass::before{display:none}
-.no-glass .panel,.no-glass .metric,.no-glass .hero,.no-glass nav,.no-glass header::before,.no-glass button:not(.primary),.no-glass dialog,.no-glass .carry,.no-glass input,.no-glass select,.no-glass textarea{background:var(--solid)}
-.no-glass .day,.no-glass .listitem,.no-glass nav button:not(.active),.no-glass header button{background:transparent}
 .reduce-motion *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 @media(min-width:768px){.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}.dashboard .panel{margin-top:0}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.settings-grid .panel{margin:0}.heading{margin-bottom:26px}h1{font-size:40px}}
 @media(max-width:420px){header{padding:12px 14px;gap:2px}.brand strong{font-size:16px}main{padding:18px 16px calc(120px + env(safe-area-inset-bottom))}.hero{padding:20px}.panel{padding:16px}.heading{gap:10px}.heading h1{font-size:30px}.grid{gap:7px}.metric{padding:13px 10px}.metric b{font-size:17px}.daymeta .cash{display:none}.day{gap:10px}.filters{gap:8px}input,select{padding:10px 10px}.breakdown strong{font-size:19px}dialog{padding:20px}.batchdays{grid-template-columns:repeat(3,1fr)}nav b{font-size:11px}}
@@ -400,14 +398,12 @@ details.adv summary{min-height:44px;padding:10px 0}
 .rate-top small{display:inline;font-size:13px}
 .stats{margin-top:0}
 @media(max-width:374px){.seg-row{grid-template-columns:1fr 1fr}nav{left:8px;right:8px;grid-template-columns:1fr 1fr 62px 1fr 1fr}}
-.no-glass .accent-dot{background:var(--c)}.no-glass .qa.primary,.no-glass .chip-radio input:checked+span{background:var(--accent)}
 #periodBar{grid-template-columns:minmax(0,1fr) auto}
 .period-label b{white-space:nowrap}
 .seg button{padding:8px 11px}
 .quick{display:flex;flex-wrap:wrap}
 .quick .qa{flex:1 1 0;min-width:0}
 .quick .qa.primary{flex-basis:100%}
-.no-glass nav button,.no-glass nav button.active{background:transparent}
 .accents{gap:8px}
 .accent-dot{width:34px;height:34px;min-height:34px}
 /* ===== 3.4: tarifas, recordatorios, datos, guía ===== */
@@ -536,3 +532,9 @@ dialog{max-height:calc(100dvh - 16px);scroll-padding:80px 0}
 .welcome button:not(.primary){background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
 .period-label small{white-space:normal;overflow:visible;text-overflow:clip;font-size:11.5px;line-height:1.25;text-align:center}
 @media(max-width:374px){#periodBar{grid-template-columns:1fr}.seg button{flex:1}}
+.pin-box{display:grid;gap:10px;width:100%}
+.pin-in{text-align:center;font-size:26px;letter-spacing:.4em}
+.pin-err{margin:0;min-height:1.2em;text-align:center}
+.pin-timer{margin:0;text-align:center;font-weight:700;color:var(--warning);font-variant-numeric:tabular-nums}
+.pin-bio{display:flex;align-items:center;justify-content:center;gap:8px}
+.lock-box small{text-align:center;font-size:12px}

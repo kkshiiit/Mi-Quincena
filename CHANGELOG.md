@@ -1,5 +1,12 @@
 # Cambios
 
+## 3.9.0
+- **Huella digital** para desbloquear (Android 10+), con el PIN como alternativa. Si la huella se bloquea por intentos, avisa y pide el PIN.
+- PIN con **límite de intentos**: cada 5 errores hay que esperar 30 s, 1 min, 2 min… (máx. 15 min), con **cuenta regresiva** visible. Sobrevive a reiniciar la app.
+- Quitar el bloqueo ahora pide el PIN actual.
+- **Reducir transparencia** ya no hace desaparecer los colores de acento, avisos ni botones de color.
+- “Sin animaciones” explica qué quita y que la app ya respeta la opción del teléfono.
+
 ## 3.8.0
 - Ícono ilustrado (moneda surfeando una ola de billetes), adaptable a cualquier forma de ícono de Android.
 - Pantalla de arranque azul noche con el ícono; sin destello blanco al abrir (tema aplicado desde el primer cuadro, fondo claro u oscuro según el sistema).

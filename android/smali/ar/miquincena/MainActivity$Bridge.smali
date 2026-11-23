@@ -1669,3 +1669,43 @@
     return-void
 .end method
 
+.method public bioAvailable()Z
+    .locals 3
+    .annotation runtime Landroid/webkit/JavascriptInterface;
+    .end annotation
+
+    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+    const/16 v1, 0x1d
+    if-lt v0, v1, :no
+    :try_start_0
+    iget-object v0, p0, Lar/miquincena/MainActivity$Bridge;->this$0:Lar/miquincena/MainActivity;
+    const-class v1, Landroid/hardware/biometrics/BiometricManager;
+    invoke-virtual {v0, v1}, Lar/miquincena/MainActivity;->getSystemService(Ljava/lang/Class;)Ljava/lang/Object;
+    move-result-object v0
+    check-cast v0, Landroid/hardware/biometrics/BiometricManager;
+    if-eqz v0, :no
+    invoke-virtual {v0}, Landroid/hardware/biometrics/BiometricManager;->canAuthenticate()I
+    move-result v0
+    :try_end_0
+    .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_0
+    if-nez v0, :no
+    const/4 v0, 0x1
+    return v0
+    :catch_0
+    :no
+    const/4 v0, 0x0
+    return v0
+.end method
+
+.method public bioAuth()V
+    .locals 2
+    .annotation runtime Landroid/webkit/JavascriptInterface;
+    .end annotation
+
+    iget-object v0, p0, Lar/miquincena/MainActivity$Bridge;->this$0:Lar/miquincena/MainActivity;
+    new-instance v1, Lar/miquincena/MainActivity$Bio;
+    invoke-direct {v1, v0}, Lar/miquincena/MainActivity$Bio;-><init>(Lar/miquincena/MainActivity;)V
+    invoke-virtual {v0, v1}, Lar/miquincena/MainActivity;->runOnUiThread(Ljava/lang/Runnable;)V
+    return-void
+.end method
+

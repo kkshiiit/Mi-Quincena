@@ -47,6 +47,7 @@ La parte nativa expone el objeto `window.Android` (`MainActivity$Bridge`):
 | `configureReminder(json)` | Recordatorio programado con `JobScheduler`. |
 | `setTheme(oscuro)` / `setDarkColor(color)` | Colores de las barras del sistema (negro puro en AMOLED). |
 | `setPayday(json)` | Fechas de cobro (sin importes) para la notificación del día de cobro; pide permiso de notificaciones. |
+| `bioAvailable()` / `bioAuth()` | Huella con `BiometricPrompt`; responde por `window.onBio('ok'|'pin'|'err', código)`. |
 | `setSecure(on)` | Activa o quita `FLAG_SECURE` (oculta en recientes, bloquea capturas). |
 | `preference(k)` / `preferenceSave(k, v)` | Preferencias pequeñas, como borradores u opciones de compartir. |
 
