@@ -74,7 +74,7 @@ app/        Interfaz y lógica (HTML, CSS y JavaScript puro, sin frameworks)
   style.css      Diseño y temas
   logo.js        Ícono embebido
 android/    Contenedor nativo (proyecto apktool: manifiesto, recursos, smali)
-
+tests/      Tests de cálculo y prueba de 3000 escenarios
 scripts/    build.sh: arma y firma el APK
 docs/       Guía, arquitectura, privacidad, capturas
 ```
