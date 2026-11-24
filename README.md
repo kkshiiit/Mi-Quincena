@@ -10,6 +10,7 @@ Registrás cada día que trabajás y la app calcula sola cuánto generaste, cuá
 [![Descargar APK](https://img.shields.io/badge/Descargar-APK%20para%20Android-0a6f66?style=for-the-badge&logo=android&logoColor=white)](https://github.com/kkshiiit/Mi-Quincena/releases/latest)
 [![CI](https://img.shields.io/github/actions/workflow/status/kkshiiit/Mi-Quincena/ci.yml?branch=main&style=for-the-badge&label=tests)](https://github.com/kkshiiit/Mi-Quincena/actions)
 ![Versión](https://img.shields.io/badge/versión-3.10.1-152e4d?style=for-the-badge)
+![Licencia](https://img.shields.io/badge/licencia-GPL--3.0-0a6f66?style=for-the-badge)
 ![Sin internet](https://img.shields.io/badge/sin%20internet-sin%20cuenta-ffc93c?style=for-the-badge)
 
 <img src="docs/img/quincena.png" width="200" alt="Pantalla Quincena">
@@ -98,3 +99,7 @@ Más detalle: [Firma](docs/FIRMA.md) · [Arquitectura](docs/ARQUITECTURA.md) · 
 
 - [SheetJS](https://sheetjs.com) 0.20.3 (Apache 2.0): Excel e importación.
 - [jsPDF](https://github.com/parallax/jsPDF) 4.2.1 (MIT): PDF.
+
+## 📄 Licencia
+
+Mi Quincena es software libre bajo la [GNU GPL v3.0](LICENSE): podés usarlo, estudiarlo, modificarlo y compartirlo, siempre que lo que distribuyas también se publique con la misma licencia.
