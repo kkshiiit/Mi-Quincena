@@ -1,5 +1,12 @@
 # Cambios
 
+## 3.10.1
+- **Tema “Sistema” arreglado en Android:** la app nativa siempre usaba un tema claro, y por eso la parte web nunca se enteraba de que el teléfono estaba en modo oscuro. Ahora hay estilos nocturnos (`values-night*`).
+- **Contraste auditado en 80 combinaciones** (5 temas × 8 acentos × transparencia sí/no) y 12 pantallas, con la norma WCAG. Arreglos: los botones principales en tema claro tenían texto blanco sobre un tono claro (2,9:1 → más de 4,5:1 con todos los acentos); el naranja como texto quedaba en 4,3:1 (ahora es más oscuro).
+- Los interruptores apagados en tema claro ahora se distinguen del fondo.
+- **Avisos de Quincena con color propio:** cobro atrasado en amarillo, días sin registrar con el color de acento, saldo de otras quincenas en coral. El saldo anterior ya no repite la deuda que muestra el aviso de cobro.
+- `npm run test:contrast` (`tests/visual/contrast.js`) corre en GitHub en cada cambio.
+
 ## 3.10.0
 - **Arreglo importante:** la parte Android solo dejaba guardar 2 preferencias y descartaba el resto en silencio. Por eso el **PIN** no quedaba activado, la **huella** no aparecía, y **ocultar en recientes**, **pedir el PIN al volver**, las **opciones de compartir**, el aviso de **última copia** y el **tema al abrir** no se guardaban. Nuevo `tests/bridge.test.js`: falla si la app usa una preferencia que Android no permite.
 - **Ajustes reorganizado por tema:** Pagos · Avisos · Privacidad · Pantalla · Tus datos · Ayuda. Los “Configurar” solo aparecen con la opción prendida. Los colores de acento entran en una fila. Si el teléfono no tiene huella, lo dice.

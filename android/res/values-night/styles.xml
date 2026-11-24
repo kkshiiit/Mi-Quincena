@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tema oscuro del sistema: hace que el WebView informe prefers-color-scheme: dark (tema "Sistema"). -->
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch</item>
+        <item name="android:statusBarColor">@color/icon_bg</item>
+    </style>
+</resources>

@@ -137,13 +137,21 @@ function shift(n) {
 
 function carryView() {
   if (!state.rules.length) return '';
-  const c = Core.carryOver(state, part() === 'all' ? month() + ':1' : currentKey());
+  const c = Core.carryOver(state, part() === 'all' ? month() + ':1' : currentKey()),
+    due = paydayDue();
+  // Si el aviso de cobro atrasado ya muestra esa misma deuda, no se repite.
+  if (due && c.periods === 1 && Math.abs(c.total - due.b) < 0.01) return '';
+  if (due && c.periods > 1) {
+    c.total = Core.round(c.total - due.b);
+    c.periods--;
+  }
   return c.periods
     ? '<button class="carry" data-action="carry">' +
         icon('pay') +
         '<span><strong>' +
         money(c.total) +
-        ' pendiente de antes</strong><small>' +
+        (due ? ' pendiente de otras quincenas' : ' pendiente de antes') +
+        '</strong><small>' +
         c.periods +
         (c.periods > 1 ? ' quincenas anteriores con saldo sin cobrar' : ' quincena anterior con saldo sin cobrar') +
         '</small></span>' +
@@ -223,6 +231,26 @@ function chartView() {
   );
 }
 
+// Quincena con cobro vencido y saldo pendiente (la más reciente), o null.
+function paydayDue() {
+  const pd = state.settings.payday;
+  if (!pd || !pd.enabled) return null;
+  const t = today(),
+    from = new Date();
+  from.setDate(from.getDate() - 45);
+  const f = [
+    from.getFullYear(),
+    String(from.getMonth() + 1).padStart(2, '0'),
+    String(from.getDate()).padStart(2, '0'),
+  ].join('-');
+  return (
+    Core.paydays(pd, f, 6)
+      .filter(x => x.date <= t)
+      .map(x => ({ ...x, b: Core.summarize(state, x.key.slice(0, 7), x.key.slice(8)).balance }))
+      .filter(x => x.b > 0.004)
+      .pop() || null
+  );
+}
 function paydayBanner() {
   const pd = state.settings.payday;
   if (!pd || !pd.enabled) return '';

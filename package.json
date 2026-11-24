@@ -1,6 +1,6 @@
 {
   "name": "mi-quincena",
-  "version": "3.10.0",
+  "version": "3.10.1",
   "private": true,
   "description": "App Android para registrar horarios y cobros por quincena",
   "scripts": {
@@ -8,6 +8,7 @@
     "serve": "python3 -m http.server 8765 --directory app",
     "build": "bash scripts/build.sh",
     "test:ui": "node tests/ui.smoke.js",
-    "format": "npx prettier@3.10.1 --write \"app/js/*.js\""
+    "format": "npx prettier@3.10.1 --write \"app/js/*.js\"",
+    "test:contrast": "node tests/visual/contrast.js"
   }
 }

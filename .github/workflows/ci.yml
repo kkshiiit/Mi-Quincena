@@ -26,6 +26,7 @@ jobs:
           npm i --no-save playwright@1.65.1
           npx playwright install --with-deps chromium
           npm run test:ui
+          npm run test:contrast
       - name: Herramientas de compilación
         run: |
           mkdir -p ~/tools
