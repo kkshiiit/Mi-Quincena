@@ -1,7 +1,7 @@
 // Utilidades: formato, íconos, fechas, colores de acento, carga diferida de librerías y descargas.
 'use strict';
 
-const APP_VERSION = '3.10.0';
+const APP_VERSION = '3.10.1';
 
 const $ = id => document.getElementById(id),
   esc = s =>
@@ -64,7 +64,7 @@ const ACCENT = {
   blue: ['Azul', '#1d5fd1', '#3b82f6', '#8ab4ff', '#5b93f5'],
   violet: ['Violeta', '#6741c9', '#8b5cf6', '#c3a9ff', '#a07cf5'],
   pink: ['Rosa', '#b8326e', '#e0528f', '#ff9ec7', '#f06aa4'],
-  orange: ['Naranja', '#b4530f', '#ea7a2a', '#ffb37a', '#f5944f'],
+  orange: ['Naranja', '#a0480a', '#ea7a2a', '#ffb37a', '#f5944f'],
   green: ['Verde', '#23753a', '#3aa856', '#8fe3a3', '#5cc979'],
   amber: ['Ámbar', '#8a6100', '#c48a00', '#ffd36b', '#f0b83a'],
   red: ['Rojo', '#b3261e', '#e0453a', '#ffaaa3', '#f07a70'],

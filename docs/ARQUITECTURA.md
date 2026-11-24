@@ -60,6 +60,7 @@ Es un proyecto de [apktool](https://apktool.org): manifiesto, recursos y código
 
 - **`res/values-v35/styles.xml`:** `windowOptOutEdgeToEdgeEnforcement`, para que el contenido no quede debajo de la barra de estado en Android 15.
 - **`res/drawable-anydpi-v26/icon.xml` + `drawable-nodpi/`:** ícono adaptable (moneda surfeando una ola de billetes), ícono clásico y el de la pantalla de arranque.
+- **`res/values-night*/styles.xml`:** tema nativo oscuro cuando el sistema está en modo oscuro. Con targetSdk 33+ el WebView informa `prefers-color-scheme: dark` solo si el tema de la app es oscuro; sin esto, el tema “Sistema” no funcionaba.
 - **`res/drawable/launch.xml`:** pantalla de arranque para Android 8 a 11.
 - **`res/values-v31/styles.xml`:** pantalla de inicio.
 - **`ExportProvider.smali` → `getType`:** devuelve el tipo correcto para `.pdf`, `.png`, `.docx`, `.xlsx` y `.txt`, para que las otras apps reconozcan los archivos compartidos.
