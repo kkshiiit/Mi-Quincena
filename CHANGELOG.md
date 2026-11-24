@@ -1,5 +1,11 @@
 # Cambios
 
+## 3.11.0
+- **AMOLED:** las tarjetas pasan de casi negro (#0b0b0b) a gris muy oscuro (#121212) con borde visible; el fondo sigue en negro puro para ahorrar batería.
+- **Menos tarjetas (atención selectiva):** Jornadas, Horas y Extras pasan a la tarjeta principal de Quincena y de Por obra; “Donde más fuiste” y el resumen de Tus datos dejan de ser tarjetas dentro de tarjetas. “Últimos registros” entra en la primera pantalla.
+- **Botones que dicen qué hacen:** “Guardar recordatorio”, “Guardar pago especial”, “Guardar días de cobro”.
+- **Ejemplos en los campos:** importe del cobro, detalle, obra, puesto y ajustes.
+
 ## 3.10.1
 - **Tema “Sistema” arreglado en Android:** la app nativa siempre usaba un tema claro, y por eso la parte web nunca se enteraba de que el teléfono estaba en modo oscuro. Ahora hay estilos nocturnos (`values-night*`).
 - **Contraste auditado en 80 combinaciones** (5 temas × 8 acentos × transparencia sí/no) y 12 pantallas, con la norma WCAG. Arreglos: los botones principales en tema claro tenían texto blanco sobre un tono claro (2,9:1 → más de 4,5:1 con todos los acentos); el naranja como texto quedaba en 4,3:1 (ahora es más oscuro).

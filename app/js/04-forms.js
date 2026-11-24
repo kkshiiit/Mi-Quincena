@@ -199,7 +199,7 @@ async function editRow(date) {
       '<div id="suggest" class="suggest" hidden></div>' +
       '<div id="workFields"><div class="step"><div class="step-h"><b>3</b>¿Dónde?</div><input name="place" type="text" maxlength="200" value="' +
       esc(r.place) +
-      '" placeholder="Escribí la obra o el lugar" aria-label="Lugar u obra" enterkeyhint="next"><div id="placeSug" class="sug-row"></div></div>' +
+      '" placeholder="Ej.: Obra Palermo, Depósito Sur…" aria-label="Lugar u obra" enterkeyhint="next"><div id="placeSug" class="sug-row"></div></div>' +
       '<div class="step"><div class="step-h"><b>4</b>Horario</div><div class="two"><label>Entraste a las<input name="start" type="time" value="' +
       esc(r.start) +
       '"></label><label>Saliste a las<input name="end" type="time" value="' +
@@ -1007,7 +1007,7 @@ function paymentForm(id, amount, key) {
       '</div></div>' +
       '<div class="step"><div class="step-h"><b>2</b>¿Cuánto cobraste?</div><input name="amount" type="number" inputmode="decimal" min="0.01" max="1000000000" step="0.01" value="' +
       esc(p ? p.amount : amount ? Core.round(amount) : '') +
-      '" placeholder="$ 0,00" required aria-label="Importe"><div class="wrap"><button type="button" class="mini" id="payAllBtn"></button></div></div>' +
+      '" placeholder="Ej.: 150000" required aria-label="Importe"><div class="wrap"><button type="button" class="mini" id="payAllBtn"></button></div></div>' +
       '<div class="step"><div class="step-h"><b>3</b>¿Cuándo te lo dieron?</div><div class="date-row"><input name="date" type="date" value="' +
       esc(p ? p.date : t0) +
       '" required aria-label="Fecha del cobro"><button type="button" class="mini" data-pday="' +
@@ -1021,7 +1021,7 @@ function paymentForm(id, amount, key) {
         .join('') +
       '</div><input name="note" type="text" maxlength="2000" value="' +
       esc(p ? p.note : '') +
-      '" placeholder="Detalle" aria-label="Detalle"></div>' +
+      '" placeholder="Detalle (opcional). Ej.: transferencia del viernes" aria-label="Detalle"></div>' +
       '<div class="preview" id="paymentPreview"></div>' +
       formEnd(id ? 'Guardar cambios' : 'Guardar cobro') +
       (id
@@ -1119,13 +1119,19 @@ function adjustmentForm(id) {
     '<h2>Ajuste o adicional</h2><form id="adjustForm">' +
       field('Fecha del período', 'date', 'date', a.date, 'required') +
       field(
-        'Importe (negativo para descuento)',
+        'Importe (con − adelante si es un descuento)',
         'amount',
         'number',
         a.amount,
-        'min="-1000000000" max="1000000000" step="0.01" required',
+        'min="-1000000000" max="1000000000" step="0.01" required placeholder="Ej.: 15000 o -20000"',
       ) +
-      field('Motivo obligatorio', 'note', 'text', a.note, 'required maxlength="2000"') +
+      field(
+        'Motivo',
+        'note',
+        'text',
+        a.note,
+        'required maxlength="2000" placeholder="Ej.: Viáticos, Adelanto, Herramientas"',
+      ) +
       formEnd('Guardar ajuste') +
       (id ? '<button type="button" id="deleteAdjustment" class="danger">Eliminar ajuste</button>' : '') +
       '</form>',
@@ -1318,7 +1324,7 @@ function remindersForm() {
         .map(([k, t, d]) => '<button type="button" class="mini" data-days="' + d.join(',') + '">' + t + '</button>')
         .join('') +
       '</div></fieldset><div class="info">Consejo: poné la hora en que normalmente terminás de trabajar. Si ya cargaste el día, ignorá el aviso.</div></div>' +
-      formEnd('Guardar') +
+      formEnd('Guardar recordatorio') +
       '</form>',
   );
   const f = $('reminderForm');
@@ -1497,7 +1503,7 @@ function specialForm() {
       '</div><button type="button" id="holAdd">' +
       icon('plus') +
       ' Agregar feriado</button>' +
-      formEnd('Guardar') +
+      formEnd('Guardar pago especial') +
       '</form>',
   );
   const draw = () => {
@@ -1598,7 +1604,7 @@ function paydayForm() {
           ':00</option>',
       ).join('') +
       '</select></label><div class="preview" id="pdPv"></div>' +
-      formEnd('Guardar') +
+      formEnd('Guardar días de cobro') +
       '</form>',
   );
   const f = $('pdForm'),
@@ -1644,7 +1650,13 @@ function profileForm() {
   modal(
     '<h2>Tu perfil</h2><p class="muted">Aparece en los recibos, PDF, Excel e imágenes que compartís.</p><form id="profileForm">' +
       field('Nombre y apellido', 'name', 'text', st.name || '', 'maxlength="80" autocomplete="name"') +
-      field('Puesto u oficio', 'job', 'text', st.job || '', 'maxlength="80" placeholder="Ej.: Repartidor, Cajera…"') +
+      field(
+        'Puesto u oficio',
+        'job',
+        'text',
+        st.job || '',
+        'maxlength="80" placeholder="Ej.: Albañil, Electricista, Ayudante…"',
+      ) +
       field('Empleador o empresa', 'employer', 'text', st.employer || '', 'maxlength="80"') +
       formEnd('Guardar perfil') +
       '</form><h3>Tu historial</h3><div class="grid stats"><div class="metric"><small>Jornadas</small><b>' +

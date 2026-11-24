@@ -341,15 +341,15 @@ function summaryView(s) {
     pct +
     '%</small><strong>' +
     money(s.paid) +
-    '</strong></div></div><button type="button" class="share-btn" data-action="share">' +
-    icon('share') +
-    ' Compartir quincena</button></section><div class="grid"><div class="metric"><small>Jornadas</small><b>' +
+    '</strong></div></div><div class="hero-stats"><div><small>Jornadas</small><b>' +
     s.days +
-    '</b></div><div class="metric"><small>Horas</small><b>' +
+    '</b></div><div><small>Horas</small><b>' +
     compactHours(s.hours) +
-    '</b></div><div class="metric"><small>Extras</small><b>' +
+    '</b></div><div><small>Extras</small><b>' +
     compactHours(s.extra) +
-    '</b></div></div></div><section class="panel recent"><div class="panel-head"><h2>Últimos registros</h2>' +
+    '</b></div></div><button type="button" class="share-btn" data-action="share">' +
+    icon('share') +
+    ' Compartir quincena</button></section></div><section class="panel recent"><div class="panel-head"><h2>Últimos registros</h2>' +
     (rows.length ? '<button class="link" data-go="hours">Ver todos ' + icon('arrow') + '</button>' : '') +
     '</div>' +
     (rows.length
@@ -899,11 +899,11 @@ function statsView() {
         '</span><span class="pill">' +
         list.length +
         (list.length === 1 ? ' obra' : ' obras') +
-        '</span></div><div class="grid"><div class="metric"><small>Días</small><b>' +
+        '</span></div><div class="hero-stats"><div><small>Días</small><b>' +
         tot.days +
-        '</b></div><div class="metric"><small>Horas</small><b>' +
+        '</b></div><div><small>Horas</small><b>' +
         compactHours(tot.hours) +
-        '</b></div><div class="metric"><small>Extras</small><b>' +
+        '</b></div><div><small>Extras</small><b>' +
         compactHours(tot.extra) +
         '</b></div></div>' +
         (state.rules.length

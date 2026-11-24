@@ -47,10 +47,11 @@
   --switch-off:color-mix(in srgb,var(--ink) 18%,transparent);
 }
 :root.amoled{
-  --bg:#000;--ink:#f2f5f7;--muted:#a3adb5;--solid:#0b0b0b;
-  --line:#1f1f1f;--hair:#1a1a1a;
-  --glass:#0b0b0b;--glass-strong:#0f0f0f;--glass-deep:#141414;--bar:#0a0a0a;
-  --spec:inset 0 0 0 1px #1f1f1f;--drop:none;--blur:none;
+  /* Negro puro de fondo (ahorra batería en OLED); las tarjetas en gris muy oscuro con borde, para que se distingan */
+  --bg:#000;--ink:#f2f5f7;--muted:#a3adb5;--solid:#121212;
+  --line:#2c2c2c;--hair:#242424;
+  --glass:#121212;--glass-strong:#1a1a1a;--glass-deep:#1e1e1e;--bar:#0c0c0c;
+  --spec:inset 0 0 0 1px #2c2c2c;--drop:none;--blur:none;
   --ambient:0;--hero-shine:transparent;
 }
 /* Tokens derivados: se declaran en body para que se calculen con los valores de
@@ -58,7 +59,7 @@
 body{--nav-bg:var(--bar);--dialog-bg:var(--glass-deep);--backdrop:rgba(6,18,28,.32);
   --hero-bg:linear-gradient(150deg,color-mix(in srgb,var(--accent-2) 22%,var(--glass-strong)),var(--glass) 60%);
   --carry-bg:linear-gradient(150deg,color-mix(in srgb,var(--coral) 26%,var(--glass-strong)),var(--glass))}
-:root.amoled body{--nav-bg:#000;--hero-bg:#0b0b0b;--carry-bg:#140c08;--dialog-bg:#0b0b0b;--backdrop:rgba(0,0,0,.75)}
+:root.amoled body{--nav-bg:#0c0c0c;--hero-bg:linear-gradient(150deg,color-mix(in srgb,var(--accent) 12%,#121212),#121212 60%);--carry-bg:#1c130d;--dialog-bg:#141414;--backdrop:rgba(0,0,0,.75)}
 /* Reducir transparencia: superficies sólidas y sin luz ambiental (solo tokens) */
 .no-glass{--glass:var(--solid);--glass-strong:var(--solid);--glass-deep:var(--solid);--bar:var(--solid);--ambient:0}
 
@@ -493,7 +494,6 @@ dialog::backdrop{background:var(--backdrop);-webkit-backdrop-filter:blur(6px);ba
 #copyShare{margin:4px auto 0}
 
 /* Por obra */
-.stats-hero .grid{margin:12px 0 6px}
 .insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0 0 4px}
 .insight{padding:12px 14px;border:1px solid var(--line);border-radius:18px;background:var(--glass)}
 .insight b{display:block;font-size:15.5px;overflow-wrap:anywhere}
@@ -624,3 +624,14 @@ dialog::backdrop{background:var(--backdrop);-webkit-backdrop-filter:blur(6px);ba
 .carry.miss{background:var(--tint)}
 .carry.miss .svg:first-child{color:var(--accent)}
 .carry .svg:last-child{color:var(--muted)}
+
+/* 3.11: menos tarjetas dentro de tarjetas (atención selectiva) */
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
+.hero-stats small{font-size:12px}
+.hero-stats b{display:block;font-size:18px;letter-spacing:-.02em;line-height:1.3}
+.hero-stats>div+div{padding-left:10px;border-left:1px solid var(--hair)}
+.insights{gap:0;margin:0 0 4px}
+.insight{background:transparent;border:0;border-left:3px solid var(--accent);border-radius:0;padding:6px 12px;margin:6px 0}
+.data-sum{gap:0;margin:8px 0 10px}
+.data-sum>div{background:transparent;border-radius:0;padding:4px 2px}
+.data-sum>div+div{border-left:1px solid var(--hair)}
