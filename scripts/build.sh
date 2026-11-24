@@ -22,6 +22,7 @@ DIST="$ROOT/dist"
 node "$ROOT/tests/core.test.js"
 node "$ROOT/tests/fuzz.test.js"
 node "$ROOT/tests/version.test.js"
+node "$ROOT/tests/bridge.test.js"
 
 rm -rf "$WORK" && mkdir -p "$WORK" "$DIST"
 cp -r "$ROOT/android" "$WORK/project"

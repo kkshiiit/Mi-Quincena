@@ -1,5 +1,12 @@
 # Cambios
 
+## 3.10.0
+- **Arreglo importante:** la parte Android solo dejaba guardar 2 preferencias y descartaba el resto en silencio. Por eso el **PIN** no quedaba activado, la **huella** no aparecía, y **ocultar en recientes**, **pedir el PIN al volver**, las **opciones de compartir**, el aviso de **última copia** y el **tema al abrir** no se guardaban. Nuevo `tests/bridge.test.js`: falla si la app usa una preferencia que Android no permite.
+- **Ajustes reorganizado por tema:** Pagos · Avisos · Privacidad · Pantalla · Tus datos · Ayuda. Los “Configurar” solo aparecen con la opción prendida. Los colores de acento entran en una fila. Si el teléfono no tiene huella, lo dice.
+- Se quitaron de Ajustes “Cargar varios días” (está en Horarios) y “Exportar período a Excel” (está en Compartir).
+- **Compartir:** elegís el período ahí mismo (esta quincena, la anterior o el mes) y hay atajos: “Reclamar lo que me deben”, “Resumen completo” y “Solo horas, sin plata”. Se quitó **Word** (el PDF cumple esa función).
+- Texto de WhatsApp más corto y en primera persona (“Me deben”), sin pie publicitario; la imagen muestra la fecha de emisión.
+
 ## 3.9.7
 - Tarifas: la ventana ya no se sale del borde en pantallas angostas con importes grandes.
 - Dependencias al día: apktool 3.0.3, GitHub Actions nuevas, Node 24, Playwright 1.65.1.

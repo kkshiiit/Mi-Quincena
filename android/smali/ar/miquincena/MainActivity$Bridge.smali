@@ -1270,19 +1270,7 @@
     .end annotation
 
     .line 18
-    const-string v0, "draft-row"
-
-    const-string v1, "welcome-v2"
-
-    filled-new-array {v0, v1}, [Ljava/lang/String;
-
-    move-result-object v0
-
-    invoke-static {v0}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
-
-    move-result-object v0
-
-    invoke-interface {v0, p1}, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+    invoke-static {p1}, Lar/miquincena/MainActivity$Bridge;->allowed(Ljava/lang/String;)Z
 
     move-result v0
 
@@ -1312,19 +1300,7 @@
     .end annotation
 
     .line 19
-    const-string v0, "draft-row"
-
-    const-string v1, "welcome-v2"
-
-    filled-new-array {v0, v1}, [Ljava/lang/String;
-
-    move-result-object v0
-
-    invoke-static {v0}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
-
-    move-result-object v0
-
-    invoke-interface {v0, p1}, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+    invoke-static {p1}, Lar/miquincena/MainActivity$Bridge;->allowed(Ljava/lang/String;)Z
 
     move-result v0
 
@@ -1740,5 +1716,21 @@
     invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
     move-result-object v3
     return-object v3
+.end method
+
+# Preferencias pequeñas que la interfaz puede leer y escribir. Cualquier otra clave se ignora.
+# tests/bridge.test.js verifica que toda clave usada en app/ esté en esta lista.
+.method static allowed(Ljava/lang/String;)Z
+    .locals 1
+
+    if-eqz p0, :no
+    const-string v0, "draft-row|welcome-v2|theme-cache|share-opts|last-backup|payday-sent|secure|pin|pin-fails|pin-lock|pin-until|bio|lock-after|away"
+    invoke-virtual {p0, v0}, Ljava/lang/String;->matches(Ljava/lang/String;)Z
+    move-result v0
+    return v0
+
+    :no
+    const/4 v0, 0x0
+    return v0
 .end method
 

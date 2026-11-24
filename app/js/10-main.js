@@ -18,7 +18,6 @@ async function action(a) {
   }
   if (a === 'about') aboutForm();
   if (a === 'payAll') paymentForm(null, summary().balance);
-  if (a === 'exportXlsx') exportExcel('pay');
   if (a === 'reminders') remindersForm();
   if (a === 'backups') backupsForm();
   if (a === 'cloud') cloudForm();

@@ -31,7 +31,7 @@ const fail = m => { console.error('✗ ' + m); process.exitCode = 1; };
     if (total !== 50000 + 2 * 6250 * 1.5) fail('cálculo del día: ' + total);
     await p.evaluate(() => paymentForm(null, null, '2026-11:1')); await p.click('#payAllBtn'); await p.click('#paymentForm [type=submit]');
     if (await p.evaluate(() => Core.summarize(state, '2026-11', '1').balance) !== 0) fail('el cobro no saldó la quincena');
-    await p.evaluate(async () => { window.download = () => {}; const o = { pending: true, total: true, paid: true, detail: true }; $('month').value = '2026-11'; $('part').value = '1'; shareTextBody(o); shareImage(o); await exportPdf(o); await exportExcel('pay', o); await exportDocx(o); });
+    await p.evaluate(async () => { window.download = () => {}; const o = { pending: true, total: true, paid: true, detail: true }; $('month').value = '2026-11'; $('part').value = '1'; shareTextBody(o); shareImage(o); await exportPdf(o); await exportExcel('pay', o); });
     // Diálogos de confirmación propios (sin confirm/prompt nativos).
     const askVisible = () => p.evaluate(() => !!document.getElementById('ask')?.open);
     await p.evaluate(() => editRow('2026-11-10'));

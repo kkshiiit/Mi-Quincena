@@ -73,7 +73,7 @@ function pinSetup(sw) {
     prefsSet('pin-fails', '0');
     pinLockSet(0);
     closeModal();
-    toast(bioReady() ? 'PIN activado. Podés sumar la huella en Funciones.' : 'Bloqueo con PIN activado.');
+    toast(bioReady() ? 'PIN activado. Podés sumar la huella en Ajustes → Privacidad.' : 'Bloqueo con PIN activado.');
     render();
   };
 }
