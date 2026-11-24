@@ -596,3 +596,21 @@ dialog::backdrop{background:var(--backdrop);-webkit-backdrop-filter:blur(6px);ba
 .primary.danger-fill,.primary.danger-fill:hover{background:var(--danger);border-color:transparent;color:var(--bg)}
 .lock-after{padding:4px 0 12px;border-top:1px solid var(--hair);color:var(--ink);font-size:15px;font-weight:650}
 .lock-after small{font-weight:500}
+/* 3.10: acentos en una sola fila */
+.accents{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;justify-items:center}
+.accent-dot{width:100%;max-width:34px;height:auto;min-height:0;aspect-ratio:1}
+.group .note-line{margin:4px 0 10px}
+/* Compartir: período y atajos */
+.share-period .mini{min-height:40px}
+.mini.on{background:var(--accent);color:var(--on-accent)}
+.share-range{margin:6px 0 0;font-size:13.5px}
+.presets{display:grid;gap:8px}
+.preset{display:grid;gap:2px;width:100%;text-align:left;min-height:0;padding:12px 14px;border:1px solid var(--hair);border-radius:16px;background:var(--glass-strong);box-shadow:none}
+.preset b{font-size:15px}
+.preset small{font-size:12.5px}
+.preset.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);background:var(--tint)}
+.preset.on:hover{background:var(--tint)}
+#modal h2+.sub-label{margin-top:4px}
+.formats{grid-template-columns:1fr 1fr}
+.format:first-child{grid-column:1/-1}
+@media(min-width:768px){.formats{grid-template-columns:1fr 1fr}.format:first-child{grid-column:1/-1;min-height:76px}}

@@ -9,7 +9,7 @@ Registrás cada día que trabajás y la app calcula sola cuánto generaste, cuá
 
 [![Descargar APK](https://img.shields.io/badge/Descargar-APK%20para%20Android-0a6f66?style=for-the-badge&logo=android&logoColor=white)](https://github.com/kkshiiit/Mi-Quincena/releases/latest)
 [![CI](https://img.shields.io/github/actions/workflow/status/kkshiiit/Mi-Quincena/ci.yml?branch=main&style=for-the-badge&label=tests)](https://github.com/kkshiiit/Mi-Quincena/actions)
-![Versión](https://img.shields.io/badge/versión-3.9.7-152e4d?style=for-the-badge)
+![Versión](https://img.shields.io/badge/versión-3.10.0-152e4d?style=for-the-badge)
 ![Sin internet](https://img.shields.io/badge/sin%20internet-sin%20cuenta-ffc93c?style=for-the-badge)
 
 <img src="docs/img/quincena.png" width="200" alt="Pantalla Quincena">
@@ -31,16 +31,16 @@ Registrás cada día que trabajás y la app calcula sola cuánto generaste, cuá
 | 🧾 **Pagos** | Registrás cada cobro eligiendo la quincena (ves cuánto te deben de cada una), ajustes (viáticos, adelantos) y cierre de quincena. |
 | 🏗️ **Por obra** | Misma empresa, distintas obras: días, horas y extras en cada una; dónde más fuiste y dónde más extras hiciste. |
 | 📈 **Tarifas por vigencia** | Por día, hora o mes. Aumentos por % o importe desde una fecha; los días anteriores conservan su valor. Hora extra fija o con recargo %. |
-| 📤 **Compartir** | WhatsApp, imagen, PDF con firmas, Excel con fórmulas y Word. |
+| 📤 **Compartir** | WhatsApp, imagen, PDF con firmas y Excel con fórmulas, con atajos como “Reclamar lo que me deben”. |
 | 🔒 **Privacidad** | Sin permiso de internet, sin cuenta ni publicidad. Bloqueo con PIN o huella (con espera tras 5 errores) y ocultar en apps recientes. |
 | 💾 **Tus datos** | Copias completas, versiones automáticas, Google Drive, importar Excel. Restaurar combinando o reemplazando, sin pisar tu tema. |
 | 🎨 **A tu gusto** | Claro, oscuro, AMOLED, 8 colores de acento, sin animaciones. |
 
-Cada función opcional se prende y se apaga desde **Ajustes → Funciones**.
+Ajustes está ordenado por tema: Pagos, Avisos, Privacidad, Pantalla, Tus datos y Ayuda.
 
 <div align="center">
 <img src="docs/img/quincena-amoled.png" width="220" alt="Modo AMOLED">
-<img src="docs/img/funciones.png" width="220" alt="Funciones opcionales">
+<img src="docs/img/funciones.png" width="220" alt="Ajustes: pagos y avisos">
 </div>
 
 ## 📲 Instalar
@@ -96,5 +96,5 @@ Más detalle: [Firma](docs/FIRMA.md) · [Arquitectura](docs/ARQUITECTURA.md) · 
 
 ## 🙌 Créditos
 
-- [SheetJS](https://sheetjs.com) 0.20.3 (Apache 2.0): Excel, importación y empaquetado de Word.
+- [SheetJS](https://sheetjs.com) 0.20.3 (Apache 2.0): Excel e importación.
 - [jsPDF](https://github.com/parallax/jsPDF) 4.2.1 (MIT): PDF.

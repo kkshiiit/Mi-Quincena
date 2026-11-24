@@ -1,4 +1,4 @@
-// Compartir y exportar: texto, imagen, PDF, Excel y Word desde un único modelo.
+// Compartir y exportar: texto, imagen, PDF y Excel desde un único modelo.
 'use strict';
 
 function shareOpts() {
@@ -15,19 +15,93 @@ function rangeLabel() {
   return dateLabel(ds[0]).slice(0, 5) + ' al ' + dateLabel(ds[ds.length - 1]);
 }
 
+// Atajos de qué incluir al compartir.
+const SHARE_PRESETS = [
+  [
+    'claim',
+    'Reclamar lo que me deben',
+    'Pendiente, lo cobrado y el detalle por día',
+    { pending: true, total: false, paid: true, detail: true },
+  ],
+  [
+    'full',
+    'Resumen completo',
+    'Todo: generado, cobrado, pendiente y detalle',
+    { pending: true, total: true, paid: true, detail: true },
+  ],
+  [
+    'hours',
+    'Solo horas, sin plata',
+    'Días, horarios y horas, sin importes',
+    { pending: false, total: false, paid: false, detail: true },
+  ],
+];
+function sharePeriod(kind) {
+  const t = today(),
+    k = Core.periodKey(t);
+  if (kind === 'now') ($('month').value = t.slice(0, 7)), ($('part').value = k.slice(8));
+  if (kind === 'prev') {
+    const p = Core.prevPeriod(k);
+    ($('month').value = p.slice(0, 7)), ($('part').value = p.slice(8));
+  }
+  if (kind === 'month') $('part').value = 'all';
+  render();
+  shareSheet();
+}
 function shareSheet() {
   const o = shareOpts(),
     s = summary(),
-    n = selectedRows().filter(r => r.status).length;
+    n = selectedRows().filter(r => r.status).length,
+    t = today(),
+    nowK = Core.periodKey(t),
+    prevK = Core.prevPeriod(nowK),
+    curK = part() === 'all' ? 'all' : month() + ':' + part(),
+    same = (a, b) => ['pending', 'total', 'paid', 'detail'].every(k => !!a[k] === !!b[k]),
+    preset = (SHARE_PRESETS.find(x => same(x[3], o)) || [])[0];
   modal(
-    '<h2>Compartir quincena</h2><p class="muted">' +
+    '<h2>Compartir</h2>' +
+      '<div class="sub-label">Período</div><div class="wrap share-period">' +
+      [
+        ['now', 'Esta quincena', curK === nowK],
+        ['prev', 'Quincena anterior', curK === prevK],
+        ['month', 'Mes completo', curK === 'all'],
+      ]
+        .map(
+          ([k, l, on]) =>
+            '<button type="button" class="mini' + (on ? ' on' : '') + '" data-sp="' + k + '">' + l + '</button>',
+        )
+        .join('') +
+      '</div><p class="muted share-range">' +
       esc(periodLabel()) +
-      '. Para otro período, cambialo con las flechas de arriba.</p><h3>Qué incluir</h3><div class="switches">' +
+      ' · ' +
+      esc(rangeLabel()) +
+      ' · ' +
+      n +
+      (n === 1 ? ' jornada' : ' jornadas') +
+      '</p>' +
+      '<div class="sub-label">Qué mandar</div><div class="presets">' +
+      SHARE_PRESETS.map(
+        ([k, t, d]) =>
+          '<button type="button" class="preset' +
+          (preset === k ? ' on' : '') +
+          '" data-preset="' +
+          k +
+          '"><b>' +
+          t +
+          '</b><small>' +
+          d +
+          '</small></button>',
+      ).join('') +
+      '</div><details class="adv"' +
+      (preset ? '' : ' open') +
+      '><summary>Elegir a mano' +
+      (preset ? '' : ' (personalizado)') +
+      '</summary><div class="switches">' +
       [
         ['pending', s.balance < 0 ? 'Saldo a tu favor' : 'Pendiente de cobro', money(Math.abs(s.balance))],
         ['total', 'Generado total', money(s.total)],
-        ['paid', 'Cobrado con porcentaje', money(s.paid) + ' · ' + pctOf(s) + '%'],
-        ['detail', 'Detalle por jornada', n + (n === 1 ? ' jornada' : ' jornadas')],
+        ['paid', 'Cobrado con porcentaje', money(s.paid) + ' · ' + pctOf(s) + ' %'],
+        ['detail', 'Detalle por día', n + (n === 1 ? ' jornada' : ' jornadas')],
       ]
         .map(
           ([k, t, d]) =>
@@ -42,13 +116,12 @@ function shareSheet() {
             '></label>',
         )
         .join('') +
-      '</div><h3>Formato</h3><div class="formats">' +
+      '</div></details><div class="sub-label">Formato</div><div class="formats">' +
       [
         ['text', 'share', 'WhatsApp o texto', 'Mensaje listo para enviar'],
         ['image', 'image', 'Imagen', 'Tarjeta para chats o estados'],
-        ['pdf', 'file', 'PDF', 'Recibo para imprimir'],
-        ['xlsx', 'table', 'Excel', 'Planilla editable'],
-        ['docx', 'doc', 'Word', 'Documento editable'],
+        ['pdf', 'file', 'PDF', 'Recibo con firmas, para mandar o imprimir'],
+        ['xlsx', 'table', 'Excel', 'Planilla con totales'],
       ]
         .map(
           ([f, ic, t, d]) =>
@@ -72,14 +145,18 @@ function shareSheet() {
     document.querySelectorAll('[data-opt]').forEach(i => (v[i.dataset.opt] = i.checked));
     return v;
   };
+  const savePrefs = v => prefsSet('share-opts', JSON.stringify(v));
+  document.querySelectorAll('[data-opt]').forEach(i => (i.onchange = () => (savePrefs(read()), shareSheet())));
   document
-    .querySelectorAll('[data-opt]')
-    .forEach(i => (i.onchange = () => prefsSet('share-opts', JSON.stringify(read()))));
+    .querySelectorAll('[data-preset]')
+    .forEach(b => (b.onclick = () => (savePrefs(SHARE_PRESETS.find(x => x[0] === b.dataset.preset)[3]), shareSheet())));
+  document.querySelectorAll('[data-sp]').forEach(b => (b.onclick = () => sharePeriod(b.dataset.sp)));
   document.querySelectorAll('[data-format]').forEach(
     b =>
       (b.onclick = async () => {
         const v = read(),
           f = b.dataset.format;
+        if (!n && v.detail && !v.pending && !v.total && !v.paid) return toast('No hay días cargados en este período.');
         b.disabled = true;
         b.classList.add('busy');
         try {
@@ -87,7 +164,6 @@ function shareSheet() {
           if (f === 'image') shareImage(v);
           if (f === 'pdf') await exportPdf(v);
           if (f === 'xlsx') await exportExcel(v.total || v.paid || v.pending ? 'pay' : 'hours', v);
-          if (f === 'docx') await exportDocx(v);
         } finally {
           b.disabled = false;
           b.classList.remove('busy');
@@ -174,28 +250,25 @@ function rateLine(x) {
 function shareTextBody(o) {
   const x = exModel(o),
     s = x.s,
-    L = ['*Mi Quincena* · ' + x.part + ' de ' + x.month];
+    L = ['*' + x.part + ' de ' + x.month + '* (' + x.range + ')'];
   if (x.name) L.push('👤 ' + x.name + (x.role ? ' — ' + x.role : ''));
   L.push(
-    '📅 ' + x.range,
-    '',
     '🗓️ ' +
       s.days +
-      (s.days === 1 ? ' jornada' : ' jornadas') +
+      (s.days === 1 ? ' día trabajado' : ' días trabajados') +
       ' · ⏱️ ' +
       compactHours(s.hours) +
-      (s.extra ? ' (extra ' + compactHours(s.extra) + ')' : ''),
+      (s.extra ? ' (' + compactHours(s.extra) + ' extra)' : ''),
   );
   const sp = x.rows.filter(r => r.mult).length;
-  if (sp) L.push('⭐ ' + sp + (sp === 1 ? ' día' : ' días') + ' con pago especial');
+  if (sp && !o.detail) L.push('⭐ ' + sp + (sp === 1 ? ' día con pago especial' : ' días con pago especial'));
   if (x.mOn) L.push('');
   if (o.total) {
     L.push('💰 *Generado:* ' + money(s.total));
-    if (x.adjs.length)
-      for (const a of x.adjs) L.push('   ' + (a.amount < 0 ? '➖ ' : '➕ ') + a.note + ': ' + sMoney(a.amount));
+    for (const a of x.adjs) L.push('   ' + (a.amount < 0 ? '➖ ' : '➕ ') + a.note + ': ' + sMoney(a.amount));
   }
-  if (o.paid) L.push('✅ *Cobrado:* ' + money(s.paid) + ' (' + x.pct + ' %)');
-  if (o.pending) L.push((s.balance < 0 ? '🟢 *A tu favor:* ' : '⏳ *Pendiente:* ') + money(Math.abs(s.balance)));
+  if (o.paid && (s.paid || o.total)) L.push('✅ *Cobrado:* ' + money(s.paid) + (o.total ? ' (' + x.pct + ' %)' : ''));
+  if (o.pending) L.push((s.balance < 0 ? '🟢 *A mi favor:* ' : '⏳ *Me deben:* ') + money(Math.abs(s.balance)));
   if (o.detail && x.rows.length) {
     L.push('', '*Detalle*');
     for (const r of x.rows)
@@ -205,8 +278,7 @@ function shareTextBody(o) {
           ' ' +
           r.short +
           ' · ' +
-          r.place +
-          (r.time ? ' · ' + r.time + ' (' + r.hours + ')' : r.place !== r.r.status ? ' · ' + r.r.status : '') +
+          (r.time ? r.place + ' · ' + r.time + ' (' + r.hours + ')' : r.r.status + (r.r.paid ? ' (pago)' : '')) +
           (r.mult ? ' · ' + r.mult : '') +
           (x.mOn && r.total != null ? ' → ' + money(r.total) : ''),
       );
@@ -217,7 +289,6 @@ function shareTextBody(o) {
       L.push('• ' + dateLabel(p.date).slice(0, 5) + ' · ' + (p.note || 'Cobro') + ' · ' + money(p.amount));
   }
   if (x.mOn && (s.missing || !state.rules.length)) L.push('', '⚠️ Cálculo parcial: faltan tarifas.');
-  L.push('', '_Hecho con Mi Quincena_');
   return L.join('\n');
 }
 
@@ -410,248 +481,10 @@ function shareImage(o) {
     }
     g.fillStyle = '#8a99a4';
     font(500, 26);
-    g.fillText('Hecho con Mi Quincena · ' + dateLabel(today()), px, cy + ch - 44);
+    g.fillText('Emitido el ' + dateLabel(today()), px, cy + ch - 44);
     download(x.file('png'), 'image/png', c.toDataURL('image/png').split(',')[1]);
   } catch (e) {
     toast('No se pudo crear la imagen: ' + e.message);
-  }
-}
-
-async function exportDocx(o) {
-  try {
-    await loadLib('xlsx.full.min.js');
-    const x = exModel(o),
-      s = x.s,
-      e = t => esc(t),
-      FONT = '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>',
-      run = (t, b, sz, col) =>
-        '<w:r><w:rPr>' +
-        FONT +
-        (b ? '<w:b/>' : '') +
-        (col ? '<w:color w:val="' + col + '"/>' : '') +
-        '<w:sz w:val="' +
-        (sz || 10) * 2 +
-        '"/></w:rPr><w:t xml:space="preserve">' +
-        e(t) +
-        '</w:t></w:r>',
-      para = (t, b, sz, col, after = 120, jc) =>
-        '<w:p><w:pPr><w:spacing w:before="0" w:after="' +
-        after +
-        '"/>' +
-        (jc ? '<w:jc w:val="' + jc + '"/>' : '') +
-        '</w:pPr>' +
-        run(t, b, sz, col) +
-        '</w:p>',
-      TW = 9638,
-      cellP = (t, b, col, jc, fill, w, sz) =>
-        '<w:tc><w:tcPr><w:tcW w:w="' +
-        w +
-        '" w:type="dxa"/>' +
-        (fill ? '<w:shd w:val="clear" w:color="auto" w:fill="' + fill + '"/>' : '') +
-        '<w:tcMar><w:top w:w="60" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:spacing w:after="0"/>' +
-        (jc ? '<w:jc w:val="' + jc + '"/>' : '') +
-        '</w:pPr>' +
-        run(t, b, sz || 9, col) +
-        '</w:p></w:tc>',
-      table = (cols, rows, total) => {
-        const ws = cols.map(c => Math.round(c[1] * TW)),
-          B =
-            '<w:tblBorders>' +
-            ['top', 'bottom', 'insideH']
-              .map(k => '<w:' + k + ' w:val="single" w:sz="4" w:space="0" w:color="DEE5EA"/>')
-              .join('') +
-            '</w:tblBorders>';
-        return (
-          '<w:tbl><w:tblPr><w:tblW w:w="' +
-          TW +
-          '" w:type="dxa"/><w:tblLayout w:type="fixed"/>' +
-          B +
-          '</w:tblPr><w:tblGrid>' +
-          ws.map(w => '<w:gridCol w:w="' + w + '"/>').join('') +
-          '</w:tblGrid><w:tr><w:trPr><w:tblHeader/></w:trPr>' +
-          cols.map((c, i) => cellP(c[0], 1, '0A6F66', c[2] ? 'right' : '', 'E0F1EE', ws[i])).join('') +
-          '</w:tr>' +
-          rows
-            .map(
-              (r, ri) =>
-                '<w:tr><w:trPr><w:cantSplit/></w:trPr>' +
-                r
-                  .map((t, i) => cellP(t, 0, '14232D', cols[i][2] ? 'right' : '', ri % 2 ? 'F7FAFA' : '', ws[i]))
-                  .join('') +
-                '</w:tr>',
-            )
-            .join('') +
-          (total
-            ? '<w:tr>' +
-              total.map((t, i) => cellP(t, 1, '14232D', cols[i][2] ? 'right' : '', 'EEF3F2', ws[i])).join('') +
-              '</w:tr>'
-            : '') +
-          '</w:tbl>' +
-          para('', 0, 6, '', 160)
-        );
-      },
-      cards = () => {
-        const c = [];
-        if (o.total) c.push(['Generado', money(s.total), 0]);
-        if (o.paid) c.push(['Cobrado · ' + x.pct + ' %', money(s.paid), 0]);
-        if (o.pending) c.push([s.balance < 0 ? 'A tu favor' : 'Pendiente', money(Math.abs(s.balance)), 1]);
-        c.push(['Jornadas · horas', s.days + ' · ' + compactHours(s.hours), 0]);
-        const w = Math.floor(TW / c.length);
-        return (
-          '<w:tbl><w:tblPr><w:tblW w:w="' +
-          TW +
-          '" w:type="dxa"/><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>' +
-          c.map(() => '<w:gridCol w:w="' + w + '"/>').join('') +
-          '</w:tblGrid><w:tr>' +
-          c
-            .map(
-              ([l, v, hi]) =>
-                '<w:tc><w:tcPr><w:tcW w:w="' +
-                w +
-                '" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="' +
-                (hi ? '0A6F66' : 'EEF3F2') +
-                '"/><w:tcMar><w:top w:w="120" w:type="dxa"/><w:bottom w:w="120" w:type="dxa"/><w:left w:w="140" w:type="dxa"/></w:tcMar></w:tcPr>' +
-                para(l, 0, 8, hi ? 'DCF5F0' : '5F6E78', 40) +
-                para(v, 1, 13, hi ? 'FFFFFF' : '14232D', 0) +
-                '</w:tc>',
-            )
-            .join('') +
-          '</w:tr></w:tbl>' +
-          para('', 0, 6, '', 200)
-        );
-      };
-    let body =
-      para('Resumen de ' + (part() === 'all' ? 'mes' : 'quincena'), 1, 22, '0A6F66', 40) +
-      para([x.name, x.role].filter(Boolean).join(' · ') || 'Mi Quincena', 1, 11, '14232D', 20) +
-      para(x.part + ' de ' + x.month + ' · ' + x.range + ' · emitido ' + dateLabel(today()), 0, 10, '5F6E78', 240) +
-      cards();
-    if (x.mOn) {
-      const L = [
-        ['Base (' + s.days + ' jornadas' + (x.monthly ? ', incluye sueldo mensual' : '') + ')', money(s.base)],
-        ['Horas extra (' + compactHours(s.extra) + ')', money(s.extraPay)],
-      ];
-      if (s.adjustments) L.push(['Ajustes y adicionales', sMoney(s.adjustments)]);
-      if (o.paid) L.push(['Cobrado', sMoney(-s.paid)]);
-      body +=
-        para('Liquidación', 1, 13, '14232D', 80) +
-        table(
-          [
-            ['Concepto', 0.7],
-            ['Importe', 0.3, 1],
-          ],
-          L,
-          [
-            o.pending ? (s.balance < 0 ? 'Saldo a tu favor' : 'Pendiente de cobro') : 'Generado',
-            money(o.pending ? Math.abs(s.balance) : s.total),
-          ],
-        ) +
-        para('Tarifa vigente: ' + rateLine(x), 0, 8.5, '5F6E78', 200);
-    }
-    if (o.detail && x.rows.length)
-      body +=
-        para('Jornadas', 1, 13, '14232D', 80) +
-        table(
-          [
-            ['Fecha', 0.11],
-            ['Lugar / actividad', x.mOn ? 0.23 : 0.42],
-            ['Horario', 0.15],
-            ['Horas', 0.13],
-            ['Extra', 0.12],
-            ['Pago', 0.07, 1],
-          ].concat(x.mOn ? [['Total', 0.19, 1]] : []),
-          x.rows.map(r =>
-            [r.wd + ' ' + r.short, r.place, r.time || r.r.status, r.hours || '—', r.extra || '—', r.mult || '—'].concat(
-              x.mOn ? [r.total != null ? money(r.total) : '—'] : [],
-            ),
-          ),
-          ['Total', s.days + ' jornadas', '', compactHours(s.hours), compactHours(s.extra), ''].concat(
-            x.mOn ? [money(Core.round(x.rows.reduce((n, r) => n + (r.total || 0), 0)))] : [],
-          ),
-        );
-    if (o.total && x.adjs.length)
-      body +=
-        para('Ajustes', 1, 13, '14232D', 80) +
-        table(
-          [
-            ['Fecha', 0.18],
-            ['Motivo', 0.57],
-            ['Importe', 0.25, 1],
-          ],
-          x.adjs.map(a => [dateLabel(a.date), a.note, sMoney(a.amount)]),
-          ['Total', '', sMoney(s.adjustments)],
-        );
-    if (o.paid && x.pays.length)
-      body +=
-        para('Cobros', 1, 13, '14232D', 80) +
-        table(
-          [
-            ['Fecha', 0.17],
-            ['Imputado a', 0.17],
-            ['Detalle', 0.41],
-            ['Importe', 0.25, 1],
-          ],
-          x.pays.map(p => [dateLabel(p.date), dateLabel(Core.allocatedDate(p)), p.note || 'Cobro', money(p.amount)]),
-          ['Total', '', '', money(s.paid)],
-        );
-    body +=
-      para('', 0, 10, '', 600) +
-      '<w:tbl><w:tblPr><w:tblW w:w="' +
-      TW +
-      '" w:type="dxa"/><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid><w:gridCol w:w="4300"/><w:gridCol w:w="1038"/><w:gridCol w:w="4300"/></w:tblGrid><w:tr>' +
-      [
-        [x.name || 'Trabajador/a', 'single'],
-        ['', 'none'],
-        ['Recibí conforme / Empleador', 'single'],
-      ]
-        .map(
-          ([t, b], i) =>
-            '<w:tc><w:tcPr><w:tcW w:w="' +
-            (i === 1 ? 1038 : 4300) +
-            '" w:type="dxa"/><w:tcBorders><w:top w:val="' +
-            b +
-            '" w:sz="6" w:space="0" w:color="96A0A5"/></w:tcBorders></w:tcPr>' +
-            para(t, 0, 8.5, '5F6E78', 0, i === 2 ? 'right' : '') +
-            '</w:tc>',
-        )
-        .join('') +
-      '</w:tr></w:tbl>' +
-      para('', 0, 6, '', 200) +
-      para(
-        'Generado con Mi Quincena según los registros cargados por el usuario. No es un recibo de sueldo oficial.',
-        0,
-        7.5,
-        '8A99A4',
-        0,
-      );
-    const doc =
-        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' +
-        body +
-        '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>',
-      enc = t => new TextEncoder().encode(t),
-      C = XLSX.CFB,
-      z = C.utils.cfb_new();
-    C.utils.cfb_add(
-      z,
-      '[Content_Types].xml',
-      enc(
-        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
-      ),
-    );
-    C.utils.cfb_add(
-      z,
-      '_rels/.rels',
-      enc(
-        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>',
-      ),
-    );
-    C.utils.cfb_add(z, 'word/document.xml', enc(doc));
-    download(
-      x.file('docx'),
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      C.write(z, { fileType: 'zip', type: 'base64' }),
-    );
-  } catch (e) {
-    toast('No se pudo crear el Word: ' + e.message);
   }
 }
 

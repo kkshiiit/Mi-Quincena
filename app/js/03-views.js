@@ -542,7 +542,9 @@ function item(k, title, desc, action) {
 
 function settingsView() {
   const st = state.settings,
-    g = (t, items) => '<section class="panel group"><h2>' + t + '</h2>' + items.join('') + '</section>',
+    sp = st.specialPay,
+    pd = st.payday,
+    pin = !!prefsGet('pin'),
     cur = Core.ruleFor(state.rules, today()),
     ini = (st.name || '')
       .trim()
@@ -552,7 +554,46 @@ function settingsView() {
       .slice(0, 2)
       .join('')
       .toUpperCase(),
-    sub = [st.job, st.employer].filter(Boolean).join(' · ');
+    sub = [st.job, st.employer].filter(Boolean).join(' · '),
+    group = (t, html) => '<section class="panel group"><h2>' + t + '</h2>' + html + '</section>',
+    // Fila con interruptor; el enlace de configurar solo aparece si está prendida.
+    feat = (k, t, d, on, more, moreText) =>
+      '<div class="feat"><label class="check switch"><span><b>' +
+      t +
+      '</b><small>' +
+      d +
+      '</small></span>' +
+      '<input type="checkbox" role="switch" data-feature="' +
+      k +
+      '" ' +
+      (on ? 'checked' : '') +
+      '></label>' +
+      (more && on
+        ? '<button type="button" class="link" data-action="' +
+          more +
+          '">' +
+          (moreText || 'Configurar') +
+          ' ' +
+          icon('arrow') +
+          '</button>'
+        : '') +
+      '</div>',
+    pref = (k, t, d) =>
+      '<label class="check switch"><span><b>' +
+      t +
+      '</b><small>' +
+      d +
+      '</small></span><input type="checkbox" role="switch" data-pref="' +
+      k +
+      '" ' +
+      (st[k] ? 'checked' : '') +
+      '></label>',
+    mult = m => (m > 1 ? multLabel(m) : 'normal'),
+    reminderTxt = st.reminder
+      ? esc(st.reminderTime) +
+        ' · ' +
+        ((st.reminderDays || []).length === 7 ? 'todos los días' : (st.reminderDays || []).map(i => WD[i]).join(' '))
+      : 'Apagado';
   return (
     '<button class="profile-card" data-action="profile"><span class="avatar">' +
     (ini ? esc(ini) : icon('user')) +
@@ -562,8 +603,10 @@ function settingsView() {
     esc(sub || 'Agregá tu nombre y trabajo para tus recibos') +
     '</small></span>' +
     icon('arrow') +
-    '</button><div class="settings-grid">' +
-    g('Trabajo y pagos', [
+    '</button>' +
+    '<div class="settings-grid">' +
+    group(
+      'Pagos',
       item(
         'pay',
         'Tarifas',
@@ -571,25 +614,71 @@ function settingsView() {
           ? money(cur.rate) + ' / ' + UNIT[cur.mode] + ' · vigente'
           : state.rules.length
             ? 'Sin tarifa vigente hoy'
-            : 'Configurala primero',
+            : 'Cargá cuánto te pagan',
         'rates',
-      ),
-      item('copy', 'Cargar varios días', 'Plantilla de tu jornada habitual', 'batch'),
-      item(
-        'bell',
-        'Recordatorios',
-        st.reminder
-          ? 'Activo · ' +
-              esc(st.reminderTime) +
-              ' · ' +
-              ((st.reminderDays || []).length === 7
-                ? 'todos los días'
-                : (st.reminderDays || []).map(i => WD[i]).join(' '))
-          : 'Desactivados',
-        'reminders',
-      ),
-    ]) +
-    '<section class="panel group look"><h2>Apariencia</h2><div class="seg-row" role="group" aria-label="Tema">' +
+      ) +
+        feat(
+          'specialPay',
+          'Pago especial en domingos y feriados',
+          sp.enabled
+            ? 'Te pregunta al cargar · domingo ' + mult(sp.sunday) + ' · feriado ' + mult(sp.holiday)
+            : 'Te pregunta si te pagan doble esos días',
+          sp.enabled,
+          'specialCfg',
+        ) +
+        feat(
+          'payday',
+          'Día de cobro',
+          pd.enabled
+            ? '1ª: día ' +
+                pd.first +
+                (pd.firstMonth === 'next' ? ' del mes siguiente' : '') +
+                ' · 2ª: día ' +
+                pd.second +
+                (pd.secondMonth === 'next' ? ' del mes siguiente' : '') +
+                (pd.notify ? ' · con notificación' : '')
+            : 'Te avisa cuándo deberían pagarte y cuánto te deben',
+          pd.enabled,
+          'paydayCfg',
+        ),
+    ) +
+    group(
+      'Avisos',
+      item('bell', 'Recordatorio para cargar el día', reminderTxt, 'reminders') +
+        feat(
+          'checks',
+          'Revisar errores de carga',
+          'Jornadas muy largas, sin obra y días que quedaron sin registrar',
+          st.checks,
+        ),
+    ) +
+    group(
+      'Privacidad',
+      feat('lock', 'Bloqueo con PIN', pin ? 'Activo · 5 errores = esperar' : 'Pide un PIN para abrir la app', pin) +
+        (pin
+          ? '<label class="lock-after">Pedir el PIN al volver<select data-lock-after aria-label="Cuándo pedir el PIN">' +
+            LOCK_OPTS.map(
+              ([v, t]) => '<option value="' + v + '"' + (lockAfter() === v ? ' selected' : '') + '>' + t + '</option>',
+            ).join('') +
+            '</select><small>Si salís menos tiempo que esto, entrás sin PIN. Al reiniciar el teléfono siempre lo pide.</small></label>' +
+            (bioReady()
+              ? feat('bio', 'Desbloquear con huella', 'Si la huella falla, usás el PIN', prefsGet('bio') === '1')
+              : '<p class="note-line">' +
+                icon('lock') +
+                ' Huella: ' +
+                (window.Android
+                  ? 'tu teléfono no tiene huellas registradas (Ajustes de Android → Seguridad).'
+                  : 'disponible en la app de Android.') +
+                '</p>')
+          : '') +
+        feat(
+          'secure',
+          'Ocultar en apps recientes',
+          'Tapa la app en recientes y bloquea capturas de pantalla',
+          prefsGet('secure') === '1',
+        ),
+    ) +
+    '<section class="panel group look"><h2>Pantalla</h2><div class="seg-row" role="group" aria-label="Tema">' +
     [
       ['system', 'Sistema'],
       ['light', 'Claro'],
@@ -624,26 +713,31 @@ function settingsView() {
           '"></button>',
       )
       .join('') +
-    '</div><label class="check switch"><span><b>Reducir transparencia</b><small>Superficies sólidas, más contraste y menos consumo</small></span><input type="checkbox" role="switch" data-pref="reduceTransparency" ' +
-    (st.reduceTransparency ? 'checked' : '') +
-    '></label><label class="check switch"><span><b>Sin animaciones</b><small>Quita las transiciones de ventanas, botones e interruptores. Si tu teléfono tiene “Quitar animaciones” activado, la app ya lo respeta sola</small></span><input type="checkbox" role="switch" data-pref="reduceMotion" ' +
-    (st.reduceMotion ? 'checked' : '') +
-    '></label></section>' +
-    '<section class="panel group"><h2>Tus datos</h2>' +
-    dataSummary() +
-    [
-      item('undo', 'Copias de seguridad', 'Exportar, restaurar y versiones automáticas', 'backups'),
-      item('cloud', 'Google Drive', 'Respaldo vinculado que se actualiza solo', 'cloud'),
-      item('file', 'Importar', 'Planilla Excel o copia .json', 'import'),
-      item('table', 'Exportar período a Excel', 'Horarios y liquidación de ' + esc(periodLabel()), 'exportXlsx'),
-      item('trash', 'Borrar todos los datos', 'Empezar de cero (se puede deshacer)', 'wipe'),
-    ].join('') +
+    '</div>' +
+    feat(
+      'placeStats',
+      'Resumen por obra en Quincena',
+      'Días, horas y extras en cada obra',
+      st.placeStats,
+      'stats',
+      'Ver por obra',
+    ) +
+    pref('reduceTransparency', 'Reducir transparencia', 'Fondos sólidos y más contraste') +
+    pref('reduceMotion', 'Sin animaciones', 'Quita las pocas transiciones que quedan') +
     '</section>' +
-    functionsSection() +
-    g('Ayuda', [
-      item('book', 'Guía de uso', 'Cómo usar cada función, con ejemplos', 'guide'),
-      item('help', 'Acerca de Mi Quincena', 'Versión, privacidad y rutina recomendada', 'about'),
-    ]) +
+    group(
+      'Tus datos',
+      dataSummary() +
+        item('undo', 'Copias de seguridad', 'Exportar, restaurar y versiones automáticas', 'backups') +
+        item('cloud', 'Google Drive', 'Respaldo vinculado que se actualiza solo', 'cloud') +
+        item('file', 'Importar', 'Planilla Excel o copia .json', 'import') +
+        item('trash', 'Borrar todos los datos', 'Empezar de cero (se puede deshacer)', 'wipe'),
+    ) +
+    group(
+      'Ayuda',
+      item('book', 'Guía de uso', 'Cómo usar cada función, con ejemplos', 'guide') +
+        item('help', 'Acerca de Mi Quincena', 'Versión, privacidad y rutina recomendada', 'about'),
+    ) +
     '</div><p class="footer">Mi Quincena ' +
     APP_VERSION +
     ' · Tus datos se guardan en este teléfono.</p>'
