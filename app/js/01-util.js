@@ -1,7 +1,7 @@
 // Utilidades: formato, íconos, fechas, colores de acento, carga diferida de librerías y descargas.
 'use strict';
 
-const APP_VERSION = '3.10.1';
+const APP_VERSION = '3.11.0';
 
 const $ = id => document.getElementById(id),
   esc = s =>
