@@ -1,5 +1,10 @@
 # Cambios
 
+## 3.9.7
+- Tarifas: la ventana ya no se sale del borde en pantallas angostas con importes grandes.
+- Dependencias al día: apktool 3.0.3, GitHub Actions nuevas, Node 24, Playwright 1.65.1.
+- Firma: contraseña de almacén opcional (`MQ_STORE_PASS`) y guía en `docs/FIRMA.md`.
+
 ## 3.9.6
 - **Pedir el PIN al volver**, a elección: siempre, o después de 1, 2, 5 o 15 minutos fuera de la app (antes era fijo en 1 minuto).
 - El tiempo fuera se mide con el reloj de Android que no se puede adelantar; si la app se cierra y se abre de nuevo dentro del tiempo elegido, tampoco pide PIN. Al reiniciar el teléfono, siempre lo pide.
